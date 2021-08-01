@@ -3,6 +3,7 @@
 IMAGES="\
 	build-agent-freebsd \
 	build-agent-windows \
+	build-cluster-manager \
 "
 
 tmpfile=$(mktemp)
