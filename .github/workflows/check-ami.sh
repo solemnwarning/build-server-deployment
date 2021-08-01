@@ -10,7 +10,7 @@ branch_name="${GITHUB_REF#refs/heads/}"
 echo "On branch $branch_name"
 echo ::set-output name=branch_name::$branch_name
 
-dir_sha=$(git log --pretty='format:%h' -n1 "$1")
+dir_sha=$(git log --pretty='format:%h' -1 "$1")
 echo "Directory $1 is at $dir_sha"
 echo ::set-output name=dir_sha::$dir_sha
 
