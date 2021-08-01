@@ -12,8 +12,16 @@ variable "buildkite_agent_token" {
   sensitive = true
 }
 
+variable "ami_branch" {
+  default = env("AMI_BRANCH")
+}
+
+variable "ami_commit" {
+  default = env("AMI_COMMIT")
+}
+
 source "amazon-ebs" "freebsd-agent" {
-  ami_name = "build-agent-freebsd-{{ isotime `20060102-150405` }}"
+  ami_name = "build-agent-freebsd-${var.ami_branch}-${var.ami_commit}-{{ isotime `20060102-150405` }}"
 
   instance_type = "t2.micro"
   region        = "us-east-2"

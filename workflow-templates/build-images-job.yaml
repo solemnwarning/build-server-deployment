@@ -1,0 +1,56 @@
+  BUILD_IMAGES_IMAGE_NAME:
+    runs-on: ubuntu-latest
+    name: BUILD_IMAGES_IMAGE_NAME
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Check if we should actually build this AMI.
+      - name: Check if AMI up to date
+        id: check
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+
+        run: ./.github/workflows/check-ami.sh BUILD_IMAGES_IMAGE_NAME
+
+      # Download any plugins/etc
+      - name: Build AMI (packer init)
+        if: steps.check.outputs.build_ami == 'true'
+        uses: hashicorp/packer-github-actions@master
+
+        with:
+          command: init
+          working_directory: BUILD_IMAGES_IMAGE_NAME
+          target: BUILD_IMAGES_IMAGE_NAME.pkr.hcl
+
+      # Validate Packer definition
+      - name: Build AMI (packer validate)
+        if: steps.check.outputs.build_ami == 'true'
+        uses: hashicorp/packer-github-actions@master
+
+        with:
+          command: validate
+          arguments: -syntax-only
+          working_directory: BUILD_IMAGES_IMAGE_NAME
+          target: BUILD_IMAGES_IMAGE_NAME.pkr.hcl
+
+      # Actually build the AMI
+      - name: Build AMI (packer build)
+        if: steps.check.outputs.build_ami == 'true'
+        uses: hashicorp/packer-github-actions@master
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
+          AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
+          AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+
+        with:
+          command: build
+          working_directory: BUILD_IMAGES_IMAGE_NAME
+          target: BUILD_IMAGES_IMAGE_NAME.pkr.hcl
