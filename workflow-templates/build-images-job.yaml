@@ -5,6 +5,8 @@
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       # Check if we should actually build this AMI.
       - name: Check if AMI up to date
