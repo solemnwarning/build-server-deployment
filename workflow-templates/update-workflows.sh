@@ -1,6 +1,9 @@
 #!/bin/bash
 
-IMAGES=build-agent-freebsd
+IMAGES="\
+	build-agent-freebsd \
+	build-agent-windows \
+"
 
 tmpfile=$(mktemp)
 
