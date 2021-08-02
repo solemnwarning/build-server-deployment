@@ -1,6 +1,7 @@
 #!/bin/bash
 
 IMAGES="\
+	build-agent-debian \
 	build-agent-freebsd \
 	build-agent-windows \
 	build-cluster-manager \
