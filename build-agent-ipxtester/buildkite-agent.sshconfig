@@ -1,0 +1,7 @@
+Host 192.168.99.*
+        User         ipxtest
+        IdentityFile ~/.ssh/ipxtest-insecure.rsa
+
+        StrictHostKeyChecking  no
+        UserKnownHostsFile     /dev/null
+        LogLevel               ERROR

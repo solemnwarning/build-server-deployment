@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+RAMDISK_SIZE_KB=$[1024 * 1024 * 192]
+RAMDISK_MOUNT_POINT="/mnt/ramdisk/"
+
+BUCKET_NAME="ipxtest-images"
+
+IPXTESTER_DIR="/opt/ipxtester/"
+IPXTESTER_USER="buildkite-agent"
+IPXTESTER_GROUP="buildkite-agent"
+
+if [ -e "/dev/ram0" ]
+then
+	echo "ERROR: /dev/ram0 already exists!" 1>&2
+	exit 1
+fi
+
+modprobe brd rd_nr=1 max_part=0 rd_size=$RAMDISK_SIZE_KB
+
+mkfs.btrfs "/dev/ram0"
+mount "/dev/ram0" "${RAMDISK_MOUNT_POINT}"
+
+mkdir "${RAMDISK_MOUNT_POINT}/ipxtester-images/"
+
+aws s3 cp \
+	"s3://${BUCKET_NAME}/MANIFEST" \
+	"${RAMDISK_MOUNT_POINT}/ipxtester-images/MANIFEST"
+
+aws s3 cp \
+	--recursive \
+	--exclude="*" \
+	`sed -Ee 's/(\S+)/--include=\1/g' < "${RAMDISK_MOUNT_POINT}/ipxtester-images/MANIFEST"` \
+	"s3://${BUCKET_NAME}/" \
+	"${RAMDISK_MOUNT_POINT}/ipxtester-images/"
+
+mkdir "${RAMDISK_MOUNT_POINT}/ipxtester-tmp/"
+chown "${IPXTESTER_USER}:${IPXTESTER_GROUP}" "${RAMDISK_MOUNT_POINT}/ipxtester-tmp/"
+
+aws s3 cp \
+	"s3://${BUCKET_NAME}/ipxtester.ini" \
+	"${IPXTESTER_DIR}/ipxtester.ini"
+
+su "${IPXTESTER_USER}" -c "${IPXTESTER_DIR}/ipxtester init"
+systemctl start buildkite-agent
