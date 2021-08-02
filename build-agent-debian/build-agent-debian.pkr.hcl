@@ -20,6 +20,11 @@ variable "buildkite_agent_token" {
   sensitive = true
 }
 
+variable "buildkite_user_ssh_key" {
+  default   = env("BUILDKITE_USER_SSH_KEY")
+  sensitive = true
+}
+
 variable apt_proxy_url {
   default = "http://172.16.0.4:8080/"
 }
@@ -99,6 +104,13 @@ build {
       "sudo install -m 0644 /tmp/buildkite-agent.cfg /etc/buildkite-agent/buildkite-agent.cfg",
       "sudo install -m 0644 /tmp/buildkite-agent.gitconfig /var/lib/buildkite-agent/.gitconfig",
 
+      "sudo mkdir -p /var/lib/buildkite-agent/.ssh/",
+      "sudo tee /var/lib/buildkite-agent/.ssh/id_rsa > /dev/null << 'EOF'",
+      "${var.buildkite_user_ssh_key}",
+      "EOF",
+      "sudo chown -R buildkite-agent:buildkite-agent /var/lib/buildkite-agent/.ssh/",
+      "sudo chmod 0600 /var/lib/buildkite-agent/.ssh/id_rsa",
+
       "sudo systemctl enable buildkite-agent.service",
 
       # Install build tools
@@ -116,11 +128,29 @@ build {
 
       # Prepare plain chroots (used with buildkite-chroot-run)
 
-      "sudo debootstrap --include=build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb           --arch=i386 stretch /srv/chroot/stretch-i386/ http://cdn-aws.deb.debian.org/debian",
+      "sudo debootstrap --include=build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,xauth           --arch=i386 stretch /srv/chroot/stretch-i386/ http://cdn-aws.deb.debian.org/debian",
       "sudo mkdir -p /srv/chroot/stretch-i386/var/lib/buildkite-agent/",
 
-      "sudo debootstrap --include=build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,mingw-w64,nasm --arch=amd64 stretch /srv/chroot/stretch-amd64/ http://cdn-aws.deb.debian.org/debian",
+      "sudo wget -O /srv/chroot/stretch-i386/opt/linuxdeploy-i386.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-i386.AppImage",
+      "sudo mount -t proc proc /srv/chroot/stretch-i386/proc/",
+      "sudo chroot /srv/chroot/stretch-i386/ /bin/bash -c ' \\",
+      "  cd /opt/ \\",
+      "  && chmod 0755 linuxdeploy-i386.AppImage \\",
+      "  && ./linuxdeploy-i386.AppImage --appimage-extract \\",
+      "  && mv squashfs-root linuxdeploy \\",
+      "  && ln -s /opt/linuxdeploy/AppRun /usr/local/bin/linuxdeploy'",
+
+      "sudo debootstrap --include=build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,xauth,mingw-w64,nasm --arch=amd64 stretch /srv/chroot/stretch-amd64/ http://cdn-aws.deb.debian.org/debian",
       "sudo mkdir -p /srv/chroot/stretch-amd64/var/lib/buildkite-agent/",
+
+      "sudo wget -O /srv/chroot/stretch-amd64/opt/linuxdeploy-x86_64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage",
+      "sudo mount -t proc proc /srv/chroot/stretch-amd64/proc/",
+      "sudo chroot /srv/chroot/stretch-amd64/ /bin/bash -c ' \\",
+      "  cd /opt/ \\",
+      "  && chmod 0755 linuxdeploy-x86_64.AppImage \\",
+      "  && ./linuxdeploy-x86_64.AppImage --appimage-extract \\",
+      "  && mv squashfs-root linuxdeploy \\",
+      "  && ln -s /opt/linuxdeploy/AppRun /usr/local/bin/linuxdeploy'",
 
       # Install WinPcap headers for building IPXWrapper
 
@@ -150,15 +180,20 @@ build {
 
       # Ubuntu 18.04 (bionic)
       "sbuild_chroot bionic i386  /srv/chroot/bionic-i386-sbuild/  http://uk.archive.ubuntu.com/ubuntu",
+      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/bionic-i386-sbuild/etc/apt/sources.list",
+
       "sbuild_chroot bionic amd64 /srv/chroot/bionic-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
+      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/bionic-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 20.04 (focal)
       "sudo ln -s gutsy /usr/share/debootstrap/scripts/focal",
       "sbuild_chroot focal amd64 /srv/chroot/focal-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
+      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/focal-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 21.04 (hirsute)
       "sudo ln -s gutsy /usr/share/debootstrap/scripts/hirsute",
       "sbuild_chroot hirsute amd64 /srv/chroot/hirsute-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
+      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/hirsute-amd64-sbuild/etc/apt/sources.list",
 
       "sudo apt-get clean",
     ]
