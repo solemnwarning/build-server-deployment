@@ -1,0 +1,9 @@
+Defaults:buildkite-agent env_keep += "HOST"
+Defaults:buildkite-agent env_keep += "CFLAGS"
+Defaults:buildkite-agent env_keep += "CXXFLAGS"
+Defaults:buildkite-agent env_keep += "LIBS"
+Defaults:buildkite-agent env_keep += "DEBUG"
+Defaults:buildkite-agent env_keep += "RPM_BUILD_NCPUS"
+
+buildkite-agent ALL=(root) NOPASSWD: /usr/local/bin/buildkite-chroot-run
+buildkite-agent ALL=(root) NOPASSWD: /usr/local/bin/buildkite-build-rpm
