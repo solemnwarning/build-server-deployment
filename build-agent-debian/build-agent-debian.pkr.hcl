@@ -128,7 +128,7 @@ build {
 
       # Prepare plain chroots (used with buildkite-chroot-run)
 
-      "sudo debootstrap --include=build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,xauth           --arch=i386 stretch /srv/chroot/stretch-i386/ http://cdn-aws.deb.debian.org/debian",
+      "sudo debootstrap --include=file,build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,xauth           --arch=i386 stretch /srv/chroot/stretch-i386/ http://cdn-aws.deb.debian.org/debian",
       "sudo mkdir -p /srv/chroot/stretch-i386/var/lib/buildkite-agent/",
 
       "sudo wget -O /srv/chroot/stretch-i386/opt/linuxdeploy-i386.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-i386.AppImage",
@@ -140,7 +140,7 @@ build {
       "  && mv squashfs-root linuxdeploy \\",
       "  && ln -s /opt/linuxdeploy/AppRun /usr/local/bin/linuxdeploy'",
 
-      "sudo debootstrap --include=build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,xauth,mingw-w64,nasm --arch=amd64 stretch /srv/chroot/stretch-amd64/ http://cdn-aws.deb.debian.org/debian",
+      "sudo debootstrap --include=file,build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libwxgtk3.0-dev,lua5.3,xvfb,xauth,mingw-w64,nasm --arch=amd64 stretch /srv/chroot/stretch-amd64/ http://cdn-aws.deb.debian.org/debian",
       "sudo mkdir -p /srv/chroot/stretch-amd64/var/lib/buildkite-agent/",
 
       "sudo wget -O /srv/chroot/stretch-amd64/opt/linuxdeploy-x86_64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage",
@@ -180,20 +180,20 @@ build {
 
       # Ubuntu 18.04 (bionic)
       "sbuild_chroot bionic i386  /srv/chroot/bionic-i386-sbuild/  http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/bionic-i386-sbuild/etc/apt/sources.list",
+      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/bionic-i386-sbuild/etc/apt/sources.list",
 
       "sbuild_chroot bionic amd64 /srv/chroot/bionic-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/bionic-amd64-sbuild/etc/apt/sources.list",
+      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/bionic-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 20.04 (focal)
       "sudo ln -s gutsy /usr/share/debootstrap/scripts/focal",
       "sbuild_chroot focal amd64 /srv/chroot/focal-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/focal-amd64-sbuild/etc/apt/sources.list",
+      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/focal-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 21.04 (hirsute)
       "sudo ln -s gutsy /usr/share/debootstrap/scripts/hirsute",
       "sbuild_chroot hirsute amd64 /srv/chroot/hirsute-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/main universe/g' /srv/chroot/hirsute-amd64-sbuild/etc/apt/sources.list",
+      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/hirsute-amd64-sbuild/etc/apt/sources.list",
 
       "sudo apt-get clean",
     ]
