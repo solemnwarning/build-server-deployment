@@ -25,6 +25,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+
         run: ./.github/workflows/check-ami.sh build-agent-debian
 
       # Download any plugins/etc
@@ -83,6 +86,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+
         run: ./.github/workflows/check-ami.sh build-agent-freebsd
 
       # Download any plugins/etc
@@ -122,6 +128,67 @@ jobs:
           command: build
           working_directory: build-agent-freebsd
           target: build-agent-freebsd.pkr.hcl
+  build-agent-ipxtester:
+    runs-on: ubuntu-latest
+    name: build-agent-ipxtester
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Check if we should actually build this AMI.
+      - name: Check if AMI up to date
+        id: check
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+
+        run: ./.github/workflows/check-ami.sh build-agent-ipxtester
+
+      # Download any plugins/etc
+      - name: Build AMI (packer init)
+        if: steps.check.outputs.build_ami == 'true'
+        uses: hashicorp/packer-github-actions@master
+
+        with:
+          command: init
+          working_directory: build-agent-ipxtester
+          target: build-agent-ipxtester.pkr.hcl
+
+      # Validate Packer definition
+      - name: Build AMI (packer validate)
+        if: steps.check.outputs.build_ami == 'true'
+        uses: hashicorp/packer-github-actions@master
+
+        with:
+          command: validate
+          arguments: -syntax-only
+          working_directory: build-agent-ipxtester
+          target: build-agent-ipxtester.pkr.hcl
+
+      # Actually build the AMI
+      - name: Build AMI (packer build)
+        if: steps.check.outputs.build_ami == 'true'
+        uses: hashicorp/packer-github-actions@master
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
+          AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
+          AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+
+        with:
+          command: build
+          working_directory: build-agent-ipxtester
+          target: build-agent-ipxtester.pkr.hcl
   build-agent-windows:
     runs-on: ubuntu-latest
     name: build-agent-windows
@@ -140,6 +207,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
+
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
 
         run: ./.github/workflows/check-ami.sh build-agent-windows
 
@@ -198,6 +268,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
+
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
 
         run: ./.github/workflows/check-ami.sh build-cluster-manager
 

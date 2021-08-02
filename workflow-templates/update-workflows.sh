@@ -3,6 +3,7 @@
 IMAGES="\
 	build-agent-debian \
 	build-agent-freebsd \
+	build-agent-ipxtester \
 	build-agent-windows \
 	build-cluster-manager \
 "

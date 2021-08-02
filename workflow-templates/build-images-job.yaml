@@ -17,6 +17,9 @@
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+
         run: ./.github/workflows/check-ami.sh BUILD_IMAGES_IMAGE_NAME
 
       # Download any plugins/etc
