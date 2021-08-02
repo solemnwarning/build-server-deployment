@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       # Check if we should actually build this AMI.
       - name: Check if AMI up to date
@@ -76,6 +77,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       # Check if we should actually build this AMI.
       - name: Check if AMI up to date
@@ -137,6 +139,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       # Check if we should actually build this AMI.
       - name: Check if AMI up to date
@@ -198,6 +201,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       # Check if we should actually build this AMI.
       - name: Check if AMI up to date
@@ -259,6 +263,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       # Check if we should actually build this AMI.
       - name: Check if AMI up to date
