@@ -72,6 +72,11 @@ build {
   }
 
   provisioner "file" {
+    source = "buildkite-agent.known_hosts"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
     source = "buildkite-agent.sudoers"
     destination = "/tmp/"
   }
@@ -105,11 +110,14 @@ build {
       "sudo install -m 0644 /tmp/buildkite-agent.gitconfig /var/lib/buildkite-agent/.gitconfig",
 
       "sudo mkdir -p /var/lib/buildkite-agent/.ssh/",
+
       "sudo tee /var/lib/buildkite-agent/.ssh/id_rsa > /dev/null << 'EOF'",
       "${var.buildkite_user_ssh_key}",
       "EOF",
       "sudo chown -R buildkite-agent:buildkite-agent /var/lib/buildkite-agent/.ssh/",
       "sudo chmod 0600 /var/lib/buildkite-agent/.ssh/id_rsa",
+
+      "sudo install -m 0600 -o buildkite-agent -g buildkite-agent /tmp/buildkite-agent.known_hosts /var/lib/buildkite-agent/.ssh/known_hosts",
 
       "sudo systemctl enable buildkite-agent.service",
 
