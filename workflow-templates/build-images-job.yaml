@@ -18,9 +18,6 @@
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
-
         run: ./.github/workflows/check-ami.sh BUILD_IMAGES_IMAGE_NAME
 
       # Download any plugins/etc
@@ -55,6 +52,9 @@
           BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
           AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
           AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
 
         with:
           command: build

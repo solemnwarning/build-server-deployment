@@ -26,9 +26,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
-
         run: ./.github/workflows/check-ami.sh build-agent-debian
 
       # Download any plugins/etc
@@ -63,6 +60,9 @@ jobs:
           BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
           AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
           AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
 
         with:
           command: build
@@ -87,9 +87,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
-
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
 
         run: ./.github/workflows/check-ami.sh build-agent-freebsd
 
@@ -125,6 +122,9 @@ jobs:
           BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
           AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
           AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
 
         with:
           command: build
@@ -149,9 +149,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
-
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
 
         run: ./.github/workflows/check-ami.sh build-agent-ipxtester
 
@@ -187,6 +184,9 @@ jobs:
           BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
           AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
           AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
 
         with:
           command: build
@@ -211,9 +211,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
-
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
 
         run: ./.github/workflows/check-ami.sh build-agent-windows
 
@@ -249,6 +246,9 @@ jobs:
           BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
           AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
           AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
 
         with:
           command: build
@@ -273,9 +273,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
-
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
 
         run: ./.github/workflows/check-ami.sh build-cluster-manager
 
@@ -311,6 +308,9 @@ jobs:
           BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
           AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
           AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
+          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
+          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
+          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
 
         with:
           command: build
