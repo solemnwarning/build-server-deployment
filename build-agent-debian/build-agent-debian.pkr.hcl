@@ -203,6 +203,9 @@ build {
       "sbuild_chroot hirsute amd64 /srv/chroot/hirsute-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/hirsute-amd64-sbuild/etc/apt/sources.list",
 
+      # Use tmpfs for schroot overlays (build stuff in tmpfs)
+      "echo 'none  /var/lib/schroot/union/overlay  tmpfs  size=75%  0  0' | sudo tee -a /etc/fstab > /dev/null",
+
       "sudo apt-get clean",
     ]
   }
