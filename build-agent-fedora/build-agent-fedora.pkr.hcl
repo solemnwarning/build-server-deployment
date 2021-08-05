@@ -1,0 +1,198 @@
+packer {
+  required_plugins {
+    amazon = {
+      version = ">= 0.0.2"
+      source  = "github.com/hashicorp/amazon"
+    }
+  }
+}
+
+variable "ami_branch" {
+  default = env("AMI_BRANCH")
+}
+
+variable "ami_commit" {
+  default = env("AMI_COMMIT")
+}
+
+variable "buildkite_agent_token" {
+  default   = env("BUILDKITE_AGENT_TOKEN")
+  sensitive = true
+}
+
+variable dnf_proxy_url {
+  # Escape for sed
+  default = "http:\\/\\/172.16.0.4:8080\\/"
+}
+
+source "amazon-ebs" "build-agent-fedora" {
+  ami_name = "build-agent-fedora-${var.ami_branch}-${var.ami_commit}-{{ isotime `20060102-150405` }}"
+  instance_type = "t2.micro"
+  region        = "us-east-2"
+
+  source_ami_filter {
+    filters = {
+      name                = "Fedora-Cloud-Base-34-*.x86_64-*"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
+
+    most_recent = true
+    owners      = ["125523088429"]
+  }
+
+  ssh_username = "fedora"
+
+  # Use user_data to enable SHA-1 signatures during SSH handshake
+  # Workaround for https://github.com/hashicorp/packer/issues/8609
+  user_data = <<EOF
+#!/bin/bash
+sudo update-crypto-policies --set LEGACY
+EOF
+
+  launch_block_device_mappings {
+    device_name = "/dev/sda1"
+    volume_size = 14
+    volume_type = "gp3"
+    delete_on_termination = true
+  }
+}
+
+build {
+  name    = "build-agent-fedora"
+  sources = [
+    "source.amazon-ebs.build-agent-fedora"
+  ]
+
+  provisioner "file" {
+    source = "buildkite-agent.cfg"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    source = "buildkite-agent.sudoers"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    source = "buildkite-build-rpm"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    source = "buildkite-environment-hook"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    source = "dnf.conf.fedora"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    source = "dnf.conf.epel7"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
+    source = "dnf.conf.epel8"
+    destination = "/tmp/"
+  }
+
+  provisioner "shell" {
+    inline = [
+      # Install Buildkite agent
+
+      "sudo tee /etc/yum.repos.d/buildkite-agent.repo <<'EOF'",
+      "[buildkite-agent]",
+      "name = Buildkite Pty Ltd",
+      "baseurl = https://yum.buildkite.com/buildkite-agent/stable/x86_64/",
+      "enabled = 1",
+      "gpgcheck = 0",
+      "priority = 1",
+      "EOF",
+
+      "sudo yum -y install buildkite-agent",
+
+      "sed -i -e 's/BUILDKITE_AGENT_TOKEN/${var.buildkite_agent_token}/g' /tmp/buildkite-agent.cfg",
+
+      "sudo install -m 0755 /tmp/buildkite-environment-hook /etc/buildkite-agent/hooks/environment",
+      "sudo install -m 0644 /tmp/buildkite-agent.cfg /etc/buildkite-agent/buildkite-agent.cfg",
+
+      "sudo systemctl enable buildkite-agent.service",
+
+      # Install build tools
+
+      "sudo yum -y install wget gcc",
+
+      "wget -O /tmp/jchroot.c https://raw.githubusercontent.com/vincentbernat/jchroot/master/jchroot.c",
+      "gcc -o /tmp/jchroot /tmp/jchroot.c",
+      "sudo install -m 0755 /tmp/jchroot /usr/local/bin/",
+
+      "sudo yum -y install perl perl-Readonly",
+
+      "sudo install -m 0755 /tmp/buildkite-build-rpm /usr/local/bin/",
+      "sudo install -m 0440 /tmp/buildkite-agent.sudoers /etc/sudoers.d/buildkite-agent",
+
+      "sudo yum -y install distribution-gpg-keys",
+      "sudo yum -y install capstone-devel jansson-devel lua-devel make wxGTK3-devel",
+
+      # Prepare Fedora 33 chroot
+
+      "ROOT=/srv/chroot/fedora-33-x86_64/",
+      "RELEASEVER=33",
+
+      "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
+      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.fedora $ROOT/etc/dnf/dnf.conf",
+      "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
+
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 groupinstall core",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
+
+      "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
+
+      # Prepare Fedora 34 chroot
+
+      "ROOT=/srv/chroot/fedora-34-x86_64/",
+      "RELEASEVER=34",
+
+      "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
+      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.fedora $ROOT/etc/dnf/dnf.conf",
+      "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
+
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 groupinstall core",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
+
+      "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
+
+      # Prepare EPEL 7 chroot
+
+      "ROOT=/srv/chroot/epel-7-x86_64/",
+
+      "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
+      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.epel7 $ROOT/etc/dnf/dnf.conf",
+      "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
+
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 groupinstall core",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install dnf dnf-plugins-core",
+
+      "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
+
+      # Prepare EPEL 8 chroot
+
+      "ROOT=/srv/chroot/epel-8-x86_64/",
+
+      "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
+      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.epel8 $ROOT/etc/dnf/dnf.conf",
+      "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
+
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 groupinstall core",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
+
+      "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
+
+      "sudo dnf clean all",
+    ]
+  }
+}
