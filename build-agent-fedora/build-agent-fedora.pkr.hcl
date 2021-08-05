@@ -174,7 +174,7 @@ build {
       "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
 
       "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 groupinstall core",
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools epel-release",
       "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install dnf dnf-plugins-core",
 
       "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
@@ -187,7 +187,7 @@ build {
       "sudo install -m 0644 -o root -g root /tmp/dnf.conf.epel8 $ROOT/etc/dnf/dnf.conf",
       "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
 
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 groupinstall core",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 groupinstall core epel-release",
       "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
 
       "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
