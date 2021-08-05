@@ -2,6 +2,7 @@
 
 IMAGES="\
 	build-agent-debian \
+	build-agent-fedora \
 	build-agent-freebsd \
 	build-agent-ipxtester \
 	build-agent-windows \
