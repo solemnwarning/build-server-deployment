@@ -103,6 +103,12 @@ build {
     inline = [
       # Install Buildkite agent
 
+      "echo ################################",
+      "echo #                              #",
+      "echo #  INSTALLING BUILDKITE AGENT  #",
+      "echo #                              #",
+      "echo ################################",
+
       "sudo tee /etc/yum.repos.d/buildkite-agent.repo <<'EOF'",
       "[buildkite-agent]",
       "name = Buildkite Pty Ltd",
@@ -123,6 +129,12 @@ build {
 
       # Install build tools
 
+      "echo ############################",
+      "echo #                          #",
+      "echo #  INSTALLING BUILD TOOLS  #",
+      "echo #                          #",
+      "echo ############################",
+
       "sudo yum -y install wget gcc",
 
       "wget -O /tmp/jchroot.c https://raw.githubusercontent.com/vincentbernat/jchroot/master/jchroot.c",
@@ -137,7 +149,44 @@ build {
       "sudo yum -y install distribution-gpg-keys",
       "sudo yum -y install capstone-devel jansson-devel lua-devel make wxGTK3-devel",
 
+      # Prepare bootstrap chroot
+      #
+      # Fedora 33+ use SQLite for their RPM database rather than BDB.
+      # When using dnf to install a chroot, the host rpm is used and whatever database format it
+      # uses winds up in the chroot.
+      #
+      # Having chroots that can't read their own RPM database isn't helpful, so instead, *sigh*, we
+      # bootstrap an EPEL 8 chroot (which, as mentioned, can't read its own RPM database), then use
+      # THAT to create the final chroots for older distributions.
+
+      "echo ################################",
+      "echo #                              #",
+      "echo #  PREPARING BOOTSTRAP CHROOT  #",
+      "echo #                              #",
+      "echo ################################",
+
+      "BOOTSTRAP=/srv/chroot/bootstrap/",
+
+      "sudo mkdir -p $BOOTSTRAP/{etc/dnf,dev,proc,usr/share,srv/chroot}/",
+      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.epel8 $BOOTSTRAP/etc/dnf/dnf.conf",
+      "sudo cp -a /usr/share/distribution-gpg-keys $BOOTSTRAP/usr/share/",
+
+      "sudo dnf --installroot=\"$BOOTSTRAP\" -c \"$BOOTSTRAP/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 install distribution-gpg-keys dnf",
+
+      "sudo cp /etc/resolv.conf $BOOTSTRAP/etc/resolv.conf",
+
+      "sudo mount -o bind /dev/         $BOOTSTRAP/dev/",
+      "sudo mount -o bind /dev/pts/     $BOOTSTRAP/dev/pts/",
+      "sudo mount -t proc none          $BOOTSTRAP/proc/",
+      "sudo mount -o bind /srv/chroot/  $BOOTSTRAP/srv/chroot/",
+
       # Prepare Fedora 33 chroot
+
+      "echo ################################",
+      "echo #                              #",
+      "echo #  PREPARING FEDORA 33 CHROOT  #",
+      "echo #                              #",
+      "echo ################################",
 
       "ROOT=/srv/chroot/fedora-33-x86_64/",
       "RELEASEVER=33",
@@ -153,6 +202,12 @@ build {
 
       # Prepare Fedora 34 chroot
 
+      "echo ################################",
+      "echo #                              #",
+      "echo #  PREPARING FEDORA 34 CHROOT  #",
+      "echo #                              #",
+      "echo ################################",
+
       "ROOT=/srv/chroot/fedora-34-x86_64/",
       "RELEASEVER=34",
 
@@ -167,19 +222,31 @@ build {
 
       # Prepare EPEL 7 chroot
 
+      "echo #############################",
+      "echo #                           #",
+      "echo #  PREPARING EPEL 7 CHROOT  #",
+      "echo #                           #",
+      "echo #############################",
+
       "ROOT=/srv/chroot/epel-7-x86_64/",
 
       "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
       "sudo install -m 0644 -o root -g root /tmp/dnf.conf.epel7 $ROOT/etc/dnf/dnf.conf",
       "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
 
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 groupinstall core",
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools epel-release",
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install dnf dnf-plugins-core",
+      "sudo chroot $BOOTSTRAP dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 groupinstall core",
+      "sudo chroot $BOOTSTRAP dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools epel-release",
+      "sudo chroot $BOOTSTRAP dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=7 --forcearch=x86_64 install dnf dnf-plugins-core",
 
       "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
 
       # Prepare EPEL 8 chroot
+
+      "echo #############################",
+      "echo #                           #",
+      "echo #  PREPARING EPEL 8 CHROOT  #",
+      "echo #                           #",
+      "echo #############################",
 
       "ROOT=/srv/chroot/epel-8-x86_64/",
 
@@ -187,10 +254,25 @@ build {
       "sudo install -m 0644 -o root -g root /tmp/dnf.conf.epel8 $ROOT/etc/dnf/dnf.conf",
       "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
 
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 groupinstall core",
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools epel-release",
+      "sudo chroot $BOOTSTRAP dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 groupinstall core",
+      "sudo chroot $BOOTSTRAP dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=8 --forcearch=x86_64 install distribution-gpg-keys rpmdevtools epel-release",
 
       "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
+
+      # Clean up bootstrap chroot
+
+      "echo #################",
+      "echo #               #",
+      "echo #  CLEANING UP  #",
+      "echo #               #",
+      "echo #################",
+
+      "sudo umount $BOOTSTRAP/srv/chroot/",
+      "sudo umount $BOOTSTRAP/proc/",
+      "sudo umount $BOOTSTRAP/dev/pts/",
+      "sudo umount $BOOTSTRAP/dev/",
+
+      "sudo rm -rf $BOOTSTRAP",
 
       "sudo dnf clean all",
     ]
