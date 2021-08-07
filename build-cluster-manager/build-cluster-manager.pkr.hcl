@@ -88,7 +88,7 @@ build {
 
       # Install and configure buildkite-spot-fleet-scaler
 
-      "sudo apt-get install -y awscli libdata-compare-perl libipc-run-perl libjson-perl liblist-compare-perl",
+      "sudo apt-get install -y awscli libdata-compare-perl libipc-run-perl libjson-perl liblist-compare-perl libwww-perl",
       "sudo install -m 0755 -o root -g root /tmp/buildkite-spot-fleet-scaler /usr/local/bin/",
 
       "sudo tee /etc/cron.d/buildkite-spot-fleet-scaler << 'EOF'",
