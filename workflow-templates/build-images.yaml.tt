@@ -78,6 +78,12 @@ jobs:
     needs: [ [% image_names.join(", ") %] ]
 
     steps:
+    - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
     - uses: hashicorp/setup-terraform@v1
 
       env:

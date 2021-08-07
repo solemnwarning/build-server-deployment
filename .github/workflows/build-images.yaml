@@ -410,6 +410,12 @@ jobs:
     needs: [ build-agent-debian, build-agent-fedora, build-agent-freebsd, build-agent-ipxtester, build-agent-windows, build-cluster-manager ]
 
     steps:
+    - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
     - uses: hashicorp/setup-terraform@v1
 
       env:
