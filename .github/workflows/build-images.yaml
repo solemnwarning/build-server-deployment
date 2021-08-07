@@ -63,6 +63,9 @@ jobs:
           IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
           IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
           BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
+          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
+          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
+          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
 
         with:
           command: build
@@ -125,6 +128,9 @@ jobs:
           IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
           IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
           BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
+          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
+          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
+          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
 
         with:
           command: build
@@ -187,6 +193,9 @@ jobs:
           IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
           IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
           BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
+          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
+          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
+          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
 
         with:
           command: build
@@ -249,6 +258,9 @@ jobs:
           IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
           IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
           BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
+          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
+          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
+          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
 
         with:
           command: build
@@ -311,6 +323,9 @@ jobs:
           IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
           IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
           BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
+          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
+          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
+          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
 
         with:
           command: build
@@ -373,6 +388,9 @@ jobs:
           IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
           IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
           BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
+          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
+          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
+          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
 
         with:
           command: build
