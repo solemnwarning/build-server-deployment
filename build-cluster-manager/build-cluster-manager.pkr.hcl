@@ -25,6 +25,10 @@ variable aws_secret_access_key {
   sensitive = true
 }
 
+variable aws_region {
+  default = "us-east-2"
+}
+
 variable buildkite_organization {
   default = "solemnwarning"
 }
@@ -95,6 +99,7 @@ build {
 
       "AWS_ACCESS_KEY_ID=${var.aws_access_key_id}",
       "AWS_SECRET_ACCESS_KEY=${var.aws_secret_access_key}",
+      "AWS_DEFAULT_REGION=${var.aws_region}",
       "BUILDKITE_ORGANIZATION=${var.buildkite_organization}",
       "BUILDKITE_API_KEY=${var.buildkite_api_key}",
       "",
