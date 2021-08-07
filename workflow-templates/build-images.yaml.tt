@@ -86,12 +86,16 @@ jobs:
 
     - uses: hashicorp/setup-terraform@v1
 
+    - run: terraform init
+      working-directory: build-cluster-aws
+
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    - run: terraform init
-      working-directory: build-cluster-aws
-
     - run: terraform apply -auto-approve
       working-directory: build-cluster-aws
+
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
