@@ -1,6 +1,13 @@
-  BUILD_IMAGES_IMAGE_NAME:
+name: Build Images
+
+on:
+  push:
+
+jobs:
+[% FOREACH image_name IN image_names %]
+  [% image_name %]:
     runs-on: ubuntu-latest
-    name: BUILD_IMAGES_IMAGE_NAME
+    name: [% image_name %]
 
     steps:
       - name: Checkout Repository
@@ -18,7 +25,7 @@
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
-        run: ./.github/workflows/check-ami.sh BUILD_IMAGES_IMAGE_NAME
+        run: ./.github/workflows/check-ami.sh [% image_name %]
 
       # Download any plugins/etc
       - name: Build AMI (packer init)
@@ -27,8 +34,8 @@
 
         with:
           command: init
-          working_directory: BUILD_IMAGES_IMAGE_NAME
-          target: BUILD_IMAGES_IMAGE_NAME.pkr.hcl
+          working_directory: [% image_name %]
+          target: [% image_name %].pkr.hcl
 
       # Validate Packer definition
       - name: Build AMI (packer validate)
@@ -38,8 +45,8 @@
         with:
           command: validate
           arguments: -syntax-only
-          working_directory: BUILD_IMAGES_IMAGE_NAME
-          target: BUILD_IMAGES_IMAGE_NAME.pkr.hcl
+          working_directory: [% image_name %]
+          target: [% image_name %].pkr.hcl
 
       # Actually build the AMI
       - name: Build AMI (packer build)
@@ -61,5 +68,24 @@
 
         with:
           command: build
-          working_directory: BUILD_IMAGES_IMAGE_NAME
-          target: BUILD_IMAGES_IMAGE_NAME.pkr.hcl
+          working_directory: [% image_name %]
+          target: [% image_name %].pkr.hcl
+[% END %]
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: "Deploy cluster"
+    needs: [ [% image_names.join(", ") %] ]
+
+    steps:
+    - uses: hashicorp/setup-terraform@v1
+
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - run: terraform init
+      working-directory: build-cluster-aws
+
+    - run: terraform apply -auto-approve
+      working-directory: build-cluster-aws

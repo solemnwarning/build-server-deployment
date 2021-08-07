@@ -1,6 +1,0 @@
-name: Build Images
-
-on:
-  push:
-
-jobs:
