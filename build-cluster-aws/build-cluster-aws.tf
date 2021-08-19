@@ -234,7 +234,7 @@ resource "aws_spot_fleet_request" "ipxtester" {
   terminate_instances_with_expiration = true
 
   tags = {
-    buildkite-agent-meta-data = "queue=ipxtester"
+    buildkite-agent-meta-data = "queue=ipxwrapper-test"
     buildkite-agent-spawn     = "6"
 
     buildkite-scaler-min-instances = "0"
