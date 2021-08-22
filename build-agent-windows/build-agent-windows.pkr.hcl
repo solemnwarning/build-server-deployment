@@ -31,6 +31,11 @@ source "amazon-ebs" "build-agent-windows" {
   instance_type = "t2.medium"
   region        = "us-east-2"
 
+  tags = {
+    amicleaner-group = "build-agent-windows"
+    amicleaner-branch = "${ var.ami_branch }"
+  }
+
   source_ami_filter {
     filters = {
       name                = "Windows_Server-2019-English-Full-Base-*"

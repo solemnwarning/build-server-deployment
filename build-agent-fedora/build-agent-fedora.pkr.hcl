@@ -30,6 +30,11 @@ source "amazon-ebs" "build-agent-fedora" {
   instance_type = "t2.micro"
   region        = "us-east-2"
 
+  tags = {
+    amicleaner-group = "build-agent-fedora"
+    amicleaner-branch = "${ var.ami_branch }"
+  }
+
   source_ami_filter {
     filters = {
       name                = "Fedora-Cloud-Base-34-*.x86_64-*"

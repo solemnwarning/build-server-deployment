@@ -26,6 +26,11 @@ source "amazon-ebs" "freebsd-agent" {
   instance_type = "t2.micro"
   region        = "us-east-2"
 
+  tags = {
+    amicleaner-group = "build-agent-freebsd"
+    amicleaner-branch = "${ var.ami_branch }"
+  }
+
   source_ami_filter {
     filters = {
       name                = "FreeBSD 13.*-RELEASE-amd64-*"

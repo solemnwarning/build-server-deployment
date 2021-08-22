@@ -34,6 +34,11 @@ source "amazon-ebs" "build-agent-debian" {
   instance_type = "t2.micro"
   region        = "us-east-2"
 
+  tags = {
+    amicleaner-group = "build-agent-debian"
+    amicleaner-branch = "${ var.ami_branch }"
+  }
+
   source_ami_filter {
     filters = {
       name                = "debian-10-amd64-*"

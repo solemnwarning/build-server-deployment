@@ -44,6 +44,11 @@ source "amazon-ebs" "build-cluster-manager" {
   instance_type = "t4g.micro"
   region        = "us-east-2"
 
+  tags = {
+    amicleaner-group = "build-cluster-manager"
+    amicleaner-branch = "${ var.ami_branch }"
+  }
+
   source_ami_filter {
     filters = {
       name                = "debian-10-arm64-*"

@@ -35,6 +35,11 @@ source "amazon-ebs" "build-agent-ipxtester" {
   instance_type = "c5n.metal" # Currently the smallest/cheapest bare-metal AMD64 instance, needed for VBox provisioning.
   region        = "us-east-2"
 
+  tags = {
+    amicleaner-group = "build-agent-ipxtester"
+    amicleaner-branch = "${ var.ami_branch }"
+  }
+
   source_ami_filter {
     filters = {
       name                = "debian-10-amd64-*"
