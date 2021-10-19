@@ -5,6 +5,10 @@ name: Build Images
 on:
   push:
 
+  schedule:
+    # Rebuild any outdated master images at 4AM every Monday.
+    -cron: '0 4 * * 1'
+
 jobs:
 
   build-agent-debian:
