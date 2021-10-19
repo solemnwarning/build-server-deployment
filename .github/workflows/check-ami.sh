@@ -33,7 +33,7 @@ ami_ok=false
 
 echo "Found ${ami_count} AMIs matching expression '${ami_name_filter}':"
 
-for ami_name in "${ami_names}"
+for ami_name in ${ami_names}
 do
 	# Extract date/time from AMI as "YYYYMMDD HH:MM:SS"
 	ami_date=$(sed -Ee 's/^.*-([0-9]{8})-([0-9]{2})([0-9]{2})([0-9]{2})$/\1 \2:\3:\4/' <<< "$ami_name")
