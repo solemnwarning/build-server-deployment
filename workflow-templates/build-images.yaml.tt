@@ -5,7 +5,7 @@ on:
 
   schedule:
     # Rebuild any outdated master images at 4AM every Monday.
-    -cron: '0 4 * * 1'
+    - cron: '0 4 * * 1'
 
 jobs:
 [% FOREACH image_name IN image_names %]
