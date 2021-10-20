@@ -27,7 +27,7 @@ variable dnf_proxy_url {
 
 source "amazon-ebs" "build-agent-fedora" {
   ami_name = "build-agent-fedora-${var.ami_branch}-${var.ami_commit}-{{ isotime `20060102-150405` }}"
-  instance_type = "t2.micro"
+  instance_type = "c5a.large"
   region        = "us-east-2"
 
   tags = {
@@ -37,7 +37,7 @@ source "amazon-ebs" "build-agent-fedora" {
 
   source_ami_filter {
     filters = {
-      name                = "Fedora-Cloud-Base-34-*.x86_64-*"
+      name                = "Fedora-Cloud-Base-35-*.x86_64-hvm-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
