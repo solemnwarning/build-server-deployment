@@ -435,3 +435,38 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  amicleaner:
+    runs-on: ubuntu-latest
+    name: "Delete old AMIs"
+    needs: [ deploy ]
+
+    steps:
+      - run: |
+          sudo pip install aws-amicleaner
+
+          # Purge any AMIs older than 7 days (excluding master branch)
+          amicleaner \
+            --full-report \
+            --mapping-key tags \
+            --mapping-values amicleaner-group amicleaner-branch \
+            --excluded-mapping-values master \
+            --ami-min-days 7 \
+            --keep-previous 0 \
+            --force-delete
+
+          # Purge any AMIs older than 7 days, keeping at least 2 versions of each.
+          # Applies to all branches, but will only affect master since other branches
+          # were more aggressively pruned first.
+          amicleaner \
+            --full-report \
+            --mapping-key tags \
+            --mapping-values amicleaner-group amicleaner-branch \
+            --ami-min-days 7 \
+            --keep-previous 2 \
+            --force-delete
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
