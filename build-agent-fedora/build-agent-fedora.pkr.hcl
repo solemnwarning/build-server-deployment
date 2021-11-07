@@ -225,6 +225,26 @@ build {
 
       "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
 
+      # Prepare Fedora 35 chroot
+
+      "echo ################################",
+      "echo #                              #",
+      "echo #  PREPARING FEDORA 35 CHROOT  #",
+      "echo #                              #",
+      "echo ################################",
+
+      "ROOT=/srv/chroot/fedora-35-x86_64/",
+      "RELEASEVER=35",
+
+      "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
+      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.fedora $ROOT/etc/dnf/dnf.conf",
+      "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
+
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 groupinstall core",
+      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
+
+      "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
+
       # Prepare EPEL 7 chroot
 
       "echo #############################",
