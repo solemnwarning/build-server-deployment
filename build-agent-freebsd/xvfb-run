@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 
 #xvfb-run my version for FreeBSD
 #12 октября 2010 г. 15:28:26 (MSD)
@@ -14,7 +14,8 @@ Xvfb :$i &
 XVFBPID=$!
 
 env DISPLAY=:$i $@
+status=$?
 
 kill $XVFBPID
 
-exit 0
+exit $status
