@@ -41,20 +41,20 @@ source "amazon-ebs" "build-agent-debian" {
 
   source_ami_filter {
     filters = {
-      name                = "debian-10-amd64-*"
+      name                = "ubuntu/images/*/ubuntu-focal-20.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
 
     most_recent = true
-    owners      = ["136693071363"]
+    owners      = ["099720109477"]
   }
 
-  ssh_username = "admin"
+  ssh_username = "ubuntu"
 
   launch_block_device_mappings {
-    device_name = "/dev/xvda"
-    volume_size = 40
+    device_name = "/dev/sda1"
+    volume_size = 24
     volume_type = "gp3"
     delete_on_termination = true
   }
@@ -199,17 +199,14 @@ build {
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/bionic-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 20.04 (focal)
-      "sudo ln -s gutsy /usr/share/debootstrap/scripts/focal",
       "sbuild_chroot focal amd64 /srv/chroot/focal-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/focal-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 21.04 (hirsute)
-      "sudo ln -s gutsy /usr/share/debootstrap/scripts/hirsute",
       "sbuild_chroot hirsute amd64 /srv/chroot/hirsute-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/hirsute-amd64-sbuild/etc/apt/sources.list",
 
       # Ubuntu 21.10 (impish)
-      "sudo ln -s gutsy /usr/share/debootstrap/scripts/impish",
       "sbuild_chroot impish amd64 /srv/chroot/impish-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/impish-amd64-sbuild/etc/apt/sources.list",
 
@@ -217,6 +214,8 @@ build {
       "echo 'none  /var/lib/schroot/union/overlay  tmpfs  size=75%  0  0' | sudo tee -a /etc/fstab > /dev/null",
 
       "sudo apt-get clean",
+
+      "df -h",
     ]
   }
 }

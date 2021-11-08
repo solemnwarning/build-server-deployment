@@ -6,7 +6,7 @@ This is a collection of scripts and Packer/Terraform definitions that build and 
 
 The following machine images are deployed using Packer (one subdirectory for each):
 
-* build-agent-debian - Debian-based Buildkite agent used for building Debian packages with git-buildpackage and running steps in normal Linux chroots.
+* build-agent-debian - Ubuntu-based Buildkite agent used for building Debian/Ubuntu packages with git-buildpackage and running steps in normal Linux chroots.
 * build-agent-fedora - Fedora-based Buildkite agent used for building RPM packages.
 * build-agent-freebsd - FreeBSD-based Buildkite agent.
 * build-agent-ipxtester - Debian-based Buildkite agent that runs the IPXWrapper test suite on bare-metal instances.
