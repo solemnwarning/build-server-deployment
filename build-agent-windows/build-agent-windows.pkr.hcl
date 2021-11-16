@@ -116,7 +116,7 @@ build {
       "msys ' '",
       "msys 'pacman --noconfirm -Syuu'",
       "msys 'pacman --noconfirm -Syuu'",
-      "msys 'pacman --noconfirm -S base-devel git p7zip mingw-w64-{i686,x86_64}-{toolchain,wxWidgets,jansson,capstone,jbigkit,lua}'",
+      "msys 'pacman --noconfirm -S base-devel git p7zip mingw-w64-{i686,x86_64}-{toolchain,wxWidgets,jansson,capstone,jbigkit,lua,libunistring}'",
       "msys 'pacman --noconfirm -Scc'",
     ]
   }
