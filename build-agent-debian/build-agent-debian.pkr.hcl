@@ -141,7 +141,7 @@ build {
 
       # Prepare plain chroots (used with buildkite-chroot-run)
 
-      "sudo debootstrap --include=file,build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libunistring-dev,libunistring2,libwxgtk3.0-dev,lua5.3,xvfb,xauth --arch=i386 stretch /srv/chroot/stretch-i386/ http://cdn-aws.deb.debian.org/debian",
+      "sudo debootstrap --include=file,build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libunistring-dev,libunistring0,libwxgtk3.0-dev,lua5.3,xvfb,xauth --arch=i386 stretch /srv/chroot/stretch-i386/ http://cdn-aws.deb.debian.org/debian",
       "sudo mkdir -p /srv/chroot/stretch-i386/var/lib/buildkite-agent/",
 
       "sudo wget -O /srv/chroot/stretch-i386/opt/linuxdeploy-i386.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-i386.AppImage",
@@ -153,7 +153,7 @@ build {
       "  && mv squashfs-root linuxdeploy \\",
       "  && ln -s /opt/linuxdeploy/AppRun /usr/local/bin/linuxdeploy'",
 
-      "sudo debootstrap --include=file,build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libunistring-dev,libunistring2,libwxgtk3.0-dev,lua5.3,xvfb,xauth,mingw-w64,nasm --arch=amd64 stretch /srv/chroot/stretch-amd64/ http://cdn-aws.deb.debian.org/debian",
+      "sudo debootstrap --include=file,build-essential,cmake,gcovr,git,libcapstone-dev,libcapstone3,libglew-dev,libglew2.0,libjansson-dev,libjansson4,liblua5.3-0,liblua5.3-dev,libopenal-dev,libsdl2-2.0-0,libsdl2-dev,libunistring-dev,libunistring0,libwxgtk3.0-dev,lua5.3,xvfb,xauth,mingw-w64,nasm --arch=amd64 stretch /srv/chroot/stretch-amd64/ http://cdn-aws.deb.debian.org/debian",
       "sudo mkdir -p /srv/chroot/stretch-amd64/var/lib/buildkite-agent/",
 
       "sudo wget -O /srv/chroot/stretch-amd64/opt/linuxdeploy-x86_64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage",
