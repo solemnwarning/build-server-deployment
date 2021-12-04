@@ -185,26 +185,6 @@ build {
       "sudo mount -t proc none          $BOOTSTRAP/proc/",
       "sudo mount -o bind /srv/chroot/  $BOOTSTRAP/srv/chroot/",
 
-      # Prepare Fedora 33 chroot
-
-      "echo ################################",
-      "echo #                              #",
-      "echo #  PREPARING FEDORA 33 CHROOT  #",
-      "echo #                              #",
-      "echo ################################",
-
-      "ROOT=/srv/chroot/fedora-33-x86_64/",
-      "RELEASEVER=33",
-
-      "sudo mkdir -p $ROOT/{etc/dnf,dev,proc,usr/share}/",
-      "sudo install -m 0644 -o root -g root /tmp/dnf.conf.fedora $ROOT/etc/dnf/dnf.conf",
-      "sudo cp -a /usr/share/distribution-gpg-keys $ROOT/usr/share/",
-
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 groupinstall core",
-      "sudo dnf --installroot=\"$ROOT\" -c \"$ROOT/etc/dnf/dnf.conf\" --nodocs --releasever=$RELEASEVER --forcearch=x86_64 install distribution-gpg-keys rpmdevtools",
-
-      "sudo sed -i -e 's/^\\[main\\]$/[main]\\nproxy=${var.dnf_proxy_url}/' \"$ROOT/etc/dnf/dnf.conf\"",
-
       # Prepare Fedora 34 chroot
 
       "echo ################################",
