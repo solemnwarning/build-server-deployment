@@ -48,7 +48,7 @@ rem  	)
 			EXIT 1
 		)
 		
-		SET PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\usr\lib\p7zip;C:\msys64\mingw32\bin
+		SET PATH=%PATH%;C:\msys64\mingw32\bin;C:\msys64\usr\bin;C:\msys64\usr\lib\p7zip
 		SET CC=gcc
 		SET CXX=g++
 		SET LUA=lua.exe
@@ -64,7 +64,7 @@ rem  	)
 			EXIT 1
 		)
 		
-		SET PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\usr\lib\p7zip;C:\msys64\mingw64\bin
+		SET PATH=%PATH%;C:\msys64\mingw64\bin;C:\msys64\usr\bin;C:\msys64\usr\lib\p7zip
 		SET CC=gcc
 		SET CXX=g++
 		SET LUA=lua.exe
