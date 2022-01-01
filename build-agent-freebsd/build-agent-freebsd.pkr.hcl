@@ -81,6 +81,7 @@ build {
       "  jansson        \\",
       "  jq             \\",
       "  lua53          \\",
+      "  lua53-luarocks \\",
       "  pidof          \\",
       "  pkgconf        \\",
       "  wget           \\",
@@ -88,6 +89,8 @@ build {
       "  xauth          \\",
       "  xorg-vfbserver \\",
       "'",
+
+      "su - root -c 'luarocks53 install busted'",
 
       "su - root -c 'install -o root -g wheel -m 0755 /tmp/xvfb-run /usr/local/bin/xvfb-run'",
     ]
