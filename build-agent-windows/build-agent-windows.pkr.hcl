@@ -116,8 +116,14 @@ build {
       "msys ' '",
       "msys 'pacman --noconfirm -Syuu'",
       "msys 'pacman --noconfirm -Syuu'",
-      "msys 'pacman --noconfirm -S base-devel git p7zip mingw-w64-{i686,x86_64}-{toolchain,wxWidgets,jansson,capstone,jbigkit,lua,libunistring}'",
+      "msys 'pacman --noconfirm -S base-devel git p7zip mingw-w64-{i686,x86_64}-{toolchain,wxWidgets,jansson,capstone,jbigkit,lua,lua-luarocks,libunistring}'",
       "msys 'pacman --noconfirm -Scc'",
+
+      "function mingw32() { C:\\msys64\\usr\\bin\\bash.exe @('-lc') + @('export PATH=/mingw32/bin:$PATH; ') + @Args; }",
+      "mingw32 'luarocks install busted'",
+
+      "function mingw64() { C:\\msys64\\usr\\bin\\bash.exe @('-lc') + @('export PATH=/mingw64/bin:$PATH; ') + @Args; }",
+      "mingw64 'luarocks install busted'",
     ]
   }
 
