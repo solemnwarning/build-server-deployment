@@ -96,6 +96,11 @@ build {
     destination = "/tmp/"
   }
 
+  provisioner "file" {
+    source = "buildkite-agent.service"
+    destination = "/tmp/"
+  }
+
   provisioner "shell" {
     inline = [
       # Install Buildkite agent
@@ -123,6 +128,9 @@ build {
       "sudo chmod 0600 /var/lib/buildkite-agent/.ssh/id_rsa",
 
       "sudo install -m 0600 -o buildkite-agent -g buildkite-agent /tmp/buildkite-agent.known_hosts /var/lib/buildkite-agent/.ssh/known_hosts",
+
+      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
+      "sudo systemctl daemon-reload",
 
       "sudo systemctl enable buildkite-agent.service",
 

@@ -83,6 +83,11 @@ build {
   }
 
   provisioner "file" {
+    source = "buildkite-agent.service"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
     source = "rc.local"
     destination = "/tmp/"
   }
@@ -124,6 +129,9 @@ build {
       "sudo install -m 0755 -o root -g root /tmp/buildkite-checkout-hook    /etc/buildkite-agent/hooks/checkout",
       "sudo install -m 0755 -o root -g root /tmp/buildkite-environment-hook /etc/buildkite-agent/hooks/environment",
       "sudo install -m 0644 -o root -g root /tmp/buildkite-agent.cfg        /etc/buildkite-agent/buildkite-agent.cfg",
+
+      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
+      "sudo systemctl daemon-reload",
 
       # Install VirtualBox
 
