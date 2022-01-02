@@ -90,7 +90,7 @@ build {
   }
 
   provisioner "file" {
-    source = "buildkite-agent.service"
+    source = "buildkite-agent.service.extra"
     destination = "/tmp/"
   }
 
@@ -135,6 +135,11 @@ build {
       "sudo install -m 0755 /tmp/buildkite-environment-hook /etc/buildkite-agent/hooks/environment",
       "sudo install -m 0644 /tmp/buildkite-agent.cfg /etc/buildkite-agent/buildkite-agent.cfg",
 
+      # Need to disable SELinux since the default policy on Fedora stops systemd from reading
+      # files in /etc/systemd/system/... fuck SELinux.
+      "sudo grubby --update-kernel ALL --args selinux=0",
+
+      "cat /usr/share/buildkite-agent/systemd/buildkite-agent.service /tmp/buildkite-agent.service.extra > /tmp/buildkite-agent.service",
       "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
       "sudo systemctl daemon-reload",
 
