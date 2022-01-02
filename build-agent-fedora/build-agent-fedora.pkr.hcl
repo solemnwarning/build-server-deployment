@@ -90,6 +90,11 @@ build {
   }
 
   provisioner "file" {
+    source = "buildkite-agent.service"
+    destination = "/tmp/"
+  }
+
+  provisioner "file" {
     source = "dnf.conf.fedora"
     destination = "/tmp/"
   }
@@ -129,6 +134,9 @@ build {
 
       "sudo install -m 0755 /tmp/buildkite-environment-hook /etc/buildkite-agent/hooks/environment",
       "sudo install -m 0644 /tmp/buildkite-agent.cfg /etc/buildkite-agent/buildkite-agent.cfg",
+
+      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
+      "sudo systemctl daemon-reload",
 
       "sudo systemctl enable buildkite-agent.service",
 

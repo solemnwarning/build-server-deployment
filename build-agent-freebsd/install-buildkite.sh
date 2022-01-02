@@ -5,6 +5,7 @@ set -e
 PREFIX=/usr/local
 USERNAME=buildkite-agent
 HOMEDIR=/var/lib/buildkite-agent
+SHUTDOWN_TIMEOUT=300
 
 tmpdir="$(mktemp -d)"
 
@@ -49,7 +50,12 @@ buildkite_agent_start()
 		touch ${buildkite_agent_log}
 		chown "${buildkite_agent_user}:wheel" /var/log/buildkite-agent.log
 		
-		/usr/bin/su - "${buildkite_agent_user}" -c "nohup buildkite-agent start > ${buildkite_agent_log} &"
+		if [ -n "${buildkite_agent_shutdown_timeout}" ]
+		then
+			nohup /bin/sh -c "/usr/bin/su - '${buildkite_agent_user}' -c 'BUILDKITE_AGENT_DISCONNECT_AFTER_IDLE_TIMEOUT=${buildkite_agent_shutdown_timeout} buildkite-agent start > ${buildkite_agent_log}' && shutdown -p +1 'buildkite-agent exited - shutting down'" &
+		else
+			/usr/bin/su - "${buildkite_agent_user}" -c "nohup buildkite-agent start > ${buildkite_agent_log} &"
+		fi
 	fi
 }
 
@@ -64,9 +70,10 @@ EOF
 
 chmod 0755 "$PREFIX/etc/rc.d/buildkite-agent"
 
-echo buildkite_agent_enable=YES                        >> /etc/rc.conf.local
-echo buildkite_agent_user=$USERNAME                    >> /etc/rc.conf.local
-echo buildkite_agent_log=/var/log/buildkite-agent.log  >> /etc/rc.conf.local
+echo buildkite_agent_enable=YES                         >> /etc/rc.conf.local
+echo buildkite_agent_user=$USERNAME                     >> /etc/rc.conf.local
+echo buildkite_agent_log=/var/log/buildkite-agent.log   >> /etc/rc.conf.local
+echo buildkite_agent_shutdown_timeout=$SHUTDOWN_TIMEOUT >> /etc/rc.conf.local
 
 if [ ! -e "/bin/bash" ]
 then
