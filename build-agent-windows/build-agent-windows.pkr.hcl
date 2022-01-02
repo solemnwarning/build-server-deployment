@@ -148,13 +148,18 @@ build {
       "Copy-Item nssm-2.24\\nssm-2.24\\win64\\nssm.exe C:\\buildkite-agent\\bin\\nssm.exe",
       "Remove-Item nssm-2.24 -Force -Recurse -ErrorAction SilentlyContinue",
 
-      "C:\\buildkite-agent\\bin\\nssm.exe install 'Buildkite Agent' 'C:\\buildkite-agent\\bin\\buildkite-agent.exe' 'start'",
+      "C:\\buildkite-agent\\bin\\nssm.exe install 'Buildkite Agent' 'C:\\buildkite-agent\\buildkite-agent-run.bat'",
     ]
   }
 
   provisioner "file" {
     source      = "buildkite-environment-hook.bat"
     destination = "C:\\buildkite-agent\\hooks\\environment.bat"
+  }
+
+  provisioner "file" {
+    source      = "buildkite-agent-run.bat"
+    destination = "C:\\buildkite-agent\\buildkite-agent-run.bat"
   }
 
   # Secure WinRM when system shuts down
