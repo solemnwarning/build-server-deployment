@@ -115,5 +115,7 @@ build {
 
       "sudo chmod 0600 /etc/cron.d/buildkite-spot-fleet-scaler",
     ]
+
+    timeout = "1h"
   }
 }

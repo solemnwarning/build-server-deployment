@@ -94,6 +94,8 @@ build {
 
       "su - root -c 'install -o root -g wheel -m 0755 /tmp/xvfb-run /usr/local/bin/xvfb-run'",
     ]
+
+    timeout = "1h"
   }
 
   provisioner "shell" {
@@ -106,6 +108,8 @@ build {
       "su - root -c 'install -m 0640 -o root -g buildkite-agent /tmp/buildkite-agent.cfg        /usr/local/etc/buildkite-agent/buildkite-agent.cfg'",
       "su - root -c 'install -m 0755 -o root -g wheel           /tmp/buildkite-environment-hook /usr/local/etc/buildkite-agent/hooks/environment'",
     ]
+
+    timeout = "1h"
   }
 
   # Cleanup temporary files.

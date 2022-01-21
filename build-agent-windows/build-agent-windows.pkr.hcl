@@ -135,6 +135,8 @@ build {
       "Expand-Archive -Path 'C:\\HTML Help Workshop.zip' -DestinationPath 'C:\\Program Files (x86)'",
       "Remove-Item 'C:\\HTML Help Workshop.zip'",
     ]
+
+    timeout = "1h"
   }
 
   # Install Buildkite Agent
@@ -160,6 +162,8 @@ build {
 
       "C:\\buildkite-agent\\bin\\nssm.exe install 'Buildkite Agent' 'C:\\buildkite-agent\\buildkite-agent-run.bat'",
     ]
+
+    timeout = "1h"
   }
 
   provisioner "file" {

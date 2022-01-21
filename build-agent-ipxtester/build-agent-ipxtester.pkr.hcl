@@ -180,5 +180,7 @@ build {
 
       "sudo apt-get clean",
     ]
+
+    timeout = "1h"
   }
 }

@@ -294,5 +294,7 @@ build {
 
       "sudo dnf clean all",
     ]
+
+    timeout = "1h"
   }
 }

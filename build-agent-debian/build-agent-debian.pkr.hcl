@@ -225,5 +225,7 @@ build {
 
       "df -h",
     ]
+
+    timeout = "1h"
   }
 }
