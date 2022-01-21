@@ -124,6 +124,8 @@ build {
       "msys 'pacman --noconfirm -S base-devel git p7zip mingw-w64-{i686,x86_64}-{toolchain,wxWidgets,jansson,capstone,jbigkit,lua,lua-luarocks,libunistring}'",
       "msys 'pacman --noconfirm -Scc'",
 
+      "msys 'perl -MCPAN -e \"install Template\"'",
+
       "function mingw32() { $env:MSYSTEM = 'MINGW32'; C:\\msys64\\usr\\bin\\bash.exe @('-lc') + @Args; Remove-Item Env:\\MSYSTEM }",
       "mingw32 'luarocks install busted'",
 
