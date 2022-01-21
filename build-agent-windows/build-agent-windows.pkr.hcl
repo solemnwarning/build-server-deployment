@@ -100,6 +100,11 @@ build {
     "source.amazon-ebs.build-agent-windows"
   ]
 
+  provisioner "file" {
+    source      = "HTML Help Workshop.zip"
+    destination = "C:\\HTML Help Workshop.zip"
+  }
+
   # Install MSYS/MinGW and any required packages.
   # Based on Docker installation instructions from https://www.msys2.org/docs/ci/
 
@@ -124,6 +129,9 @@ build {
 
       "function mingw64() { $env:MSYSTEM = 'MINGW64'; C:\\msys64\\usr\\bin\\bash.exe @('-lc') + @Args; Remove-Item Env:\\MSYSTEM }",
       "mingw64 'luarocks install busted'",
+
+      "Expand-Archive -Path 'C:\\HTML Help Workshop.zip' -DestinationPath 'C:\\Program Files (x86)'",
+      "Remove-Item 'C:\\HTML Help Workshop.zip'",
     ]
   }
 

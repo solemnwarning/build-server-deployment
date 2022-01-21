@@ -33,6 +33,7 @@ jobs:
 
         run: ./.github/workflows/check-ami.sh build-agent-debian
 
+
       # Download any plugins/etc
       - name: Build AMI (packer init)
         if: steps.check.outputs.build_ami == 'true'
@@ -98,6 +99,7 @@ jobs:
           AWS_DEFAULT_REGION: us-east-2
 
         run: ./.github/workflows/check-ami.sh build-agent-fedora
+
 
       # Download any plugins/etc
       - name: Build AMI (packer init)
@@ -165,6 +167,7 @@ jobs:
 
         run: ./.github/workflows/check-ami.sh build-agent-freebsd
 
+
       # Download any plugins/etc
       - name: Build AMI (packer init)
         if: steps.check.outputs.build_ami == 'true'
@@ -230,6 +233,7 @@ jobs:
           AWS_DEFAULT_REGION: us-east-2
 
         run: ./.github/workflows/check-ami.sh build-agent-ipxtester
+
 
       # Download any plugins/etc
       - name: Build AMI (packer init)
@@ -297,6 +301,16 @@ jobs:
 
         run: ./.github/workflows/check-ami.sh build-agent-windows
 
+      - name: Download HTML Help Workshop
+        if: steps.check.outputs.build_ami == 'true'
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+
+          run: aws s3 cp "s3://build-cluster-state/HTML Help Workshop.zip" "build-agent-windows/HTML Help Workshop.zip"
+
       # Download any plugins/etc
       - name: Build AMI (packer init)
         if: steps.check.outputs.build_ami == 'true'
@@ -362,6 +376,7 @@ jobs:
           AWS_DEFAULT_REGION: us-east-2
 
         run: ./.github/workflows/check-ami.sh build-cluster-manager
+
 
       # Download any plugins/etc
       - name: Build AMI (packer init)
