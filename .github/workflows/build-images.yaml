@@ -309,7 +309,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
-          run: aws s3 cp "s3://build-cluster-state/HTML Help Workshop.zip" "build-agent-windows/HTML Help Workshop.zip"
+        run: aws s3 cp "s3://build-cluster-state/HTML Help Workshop.zip" "build-agent-windows/HTML Help Workshop.zip"
 
       # Download any plugins/etc
       - name: Build AMI (packer init)

@@ -40,7 +40,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
 
-          run: aws s3 cp "s3://build-cluster-state/HTML Help Workshop.zip" "[% image_name %]/HTML Help Workshop.zip"
+        run: aws s3 cp "s3://build-cluster-state/HTML Help Workshop.zip" "[% image_name %]/HTML Help Workshop.zip"
       [%- END %]
 
       # Download any plugins/etc
