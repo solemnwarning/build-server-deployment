@@ -91,8 +91,8 @@ my $ok = (
 	&& !system("mount", "-t", "overlay", "-o", "lowerdir=$lower,upperdir=$upper,workdir=$work", "overlay", "$root")
 	
 	# Make DNS resolution work in chroot.
-	&& !system("cp", "/etc/hosts",       "$root/etc/hosts")
-	&& !system("cp", "/etc/resolv.conf", "$root/etc/resolv.conf")
+	&& !system("cp", "--remove-destination", "/etc/hosts",       "$root/etc/hosts")
+	&& !system("cp", "--remove-destination", "/etc/resolv.conf", "$root/etc/resolv.conf")
 	
 	# Bind mount host /dev/ inside the chroot.
 	&& !system("mount", "-o", "bind,ro", "/dev/", "$root/dev/")
