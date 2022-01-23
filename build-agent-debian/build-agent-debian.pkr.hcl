@@ -210,10 +210,6 @@ build {
       "sbuild_chroot focal amd64 /srv/chroot/focal-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/focal-amd64-sbuild/etc/apt/sources.list",
 
-      # Ubuntu 21.04 (hirsute)
-      "sbuild_chroot hirsute amd64 /srv/chroot/hirsute-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/hirsute-amd64-sbuild/etc/apt/sources.list",
-
       # Ubuntu 21.10 (impish)
       "sbuild_chroot impish amd64 /srv/chroot/impish-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/impish-amd64-sbuild/etc/apt/sources.list",
