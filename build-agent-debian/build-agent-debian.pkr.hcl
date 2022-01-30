@@ -136,7 +136,7 @@ build {
 
       # Install build tools
 
-      "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper",
+      "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua",
 
       "wget -O /tmp/jchroot.c https://raw.githubusercontent.com/vincentbernat/jchroot/master/jchroot.c",
       "gcc -o /tmp/jchroot /tmp/jchroot.c",
