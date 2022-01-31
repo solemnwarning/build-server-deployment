@@ -108,6 +108,8 @@ build {
 
   provisioner "shell" {
     inline = [
+      "#!/bin/bash -e",
+
       # Install Buildkite agent
 
       "sudo apt-get update",
