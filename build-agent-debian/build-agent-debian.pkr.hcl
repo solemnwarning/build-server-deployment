@@ -101,6 +101,11 @@ build {
     destination = "/tmp/"
   }
 
+  provisioner "file" {
+    source = "WpdPack_4_1_2.zip"
+    destination = "/tmp/"
+  }
+
   provisioner "shell" {
     inline = [
       # Install Buildkite agent
@@ -175,7 +180,7 @@ build {
 
       # Install WinPcap headers for building IPXWrapper
 
-      "wget -O /tmp/WpdPack_4_1_2.zip https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip",
+      # "wget -O /tmp/WpdPack_4_1_2.zip https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip",
       "mkdir /tmp/WpdPack_4_1_2/",
       "unzip /tmp/WpdPack_4_1_2.zip -d /tmp/WpdPack_4_1_2/",
       "sudo cp -r /tmp/WpdPack_4_1_2/WpdPack/Include/* /srv/chroot/stretch-amd64/usr/i686-w64-mingw32/include/",
