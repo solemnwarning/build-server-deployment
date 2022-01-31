@@ -199,6 +199,10 @@ build {
       "sbuild_chroot bullseye i386  /srv/chroot/bullseye-i386-sbuild/  http://cdn-aws.deb.debian.org/debian",
       "sbuild_chroot bullseye amd64 /srv/chroot/bullseye-amd64-sbuild/ http://cdn-aws.deb.debian.org/debian",
 
+      # Debian 12(?) (bookworm)
+      "sbuild_chroot bookworm i386  /srv/chroot/bookworm-i386-sbuild/  http://cdn-aws.deb.debian.org/debian",
+      "sbuild_chroot bookworm amd64 /srv/chroot/bookworm-amd64-sbuild/ http://cdn-aws.deb.debian.org/debian",
+
       # Ubuntu 18.04 (bionic)
       "sbuild_chroot bionic i386  /srv/chroot/bionic-i386-sbuild/  http://uk.archive.ubuntu.com/ubuntu",
       "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/bionic-i386-sbuild/etc/apt/sources.list",
