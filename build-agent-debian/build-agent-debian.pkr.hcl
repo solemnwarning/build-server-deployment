@@ -235,9 +235,7 @@ build {
       "    sed -E \\",
       "        -e 's/^\\[(.*)-sbuild\\]$/[\\1-buildkite]/' \\",
       "        -e 's/^profile=sbuild$/profile=buildkite/' \\",
-      "        < \"$f\" \\",
-      "        | sudo tee \"$(sed -e 's/sbuild-/buildkite-/' <<< \"$f\")\" \\",
-      "        > /dev/null",
+      "        < \"$f\" | sudo tee \"$(sed -e 's/sbuild-/buildkite-/' <<< \"$f\")\" > /dev/null",
       "done",
 
       "sudo cp -an /etc/schroot/sbuild /etc/schroot/buildkite",
