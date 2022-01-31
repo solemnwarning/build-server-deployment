@@ -221,6 +221,24 @@ build {
       # Use tmpfs for schroot overlays (build stuff in tmpfs)
       "echo 'none  /var/lib/schroot/union/overlay  tmpfs  size=75%  0  0' | sudo tee -a /etc/fstab > /dev/null",
 
+      # Set up "${DIST}-${ARCH}-buildkite" configurations for each of the
+      # sbuild chroots which will mount /var/lib/buildkite-agent/builds/ inside
+      # the chroot so they can be used for non-sbuild stuff too.
+
+      "for f in /etc/schroot/chroot.d/*-sbuild-*",
+      "do",
+      "    sed -E \\",
+      "        -e 's/^\\[(.*)-sbuild\\]$/[\\1-buildkite]/' \\",
+      "        -e 's/^profile=sbuild$/profile=buildkite/' \\",
+      "        < \"$f\" \\",
+      "        | sudo tee \"$(sed -e 's/sbuild-/buildkite-/' <<< \"$f\")\" \\",
+      "        > /dev/null",
+      "done",
+
+      "sudo cp -an /etc/schroot/sbuild /etc/schroot/buildkite",
+      "echo '/var/lib/buildkite-agent/builds/  /var/lib/buildkite-agent/builds/  none  rw,bind  0  0' \\",
+      "    | sudo tee -a /etc/schroot/buildkite/fstab > /dev/null",
+
       "sudo apt-get clean",
 
       "df -h",
