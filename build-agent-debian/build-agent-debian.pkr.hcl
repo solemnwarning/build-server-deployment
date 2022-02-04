@@ -111,6 +111,11 @@ build {
     destination = "/tmp/"
   }
 
+  provisioner "file" {
+    source = "../solemnwarning-archive-keyring.asc"
+    destination = "/tmp/"
+  }
+
   provisioner "shell" {
     inline = [
       "#!/bin/bash -e",
@@ -148,7 +153,10 @@ build {
 
       # Install build tools
 
-      "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua gem2deb",
+      "gpg --dearmor < /tmp/solemnwarning-archive-keyring.asc | sudo tee /etc/apt/trusted.gpg.d/solemnwarning-archive-keyring.gpg > /dev/null",
+      "echo deb http://repos.solemnwarning.net/debian/ impish main | sudo tee /etc/apt/sources.list.d/solemnwarning.list > /dev/null",
+
+      "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua gem2deb deb-s3",
 
       "wget -O /tmp/jchroot.c https://raw.githubusercontent.com/vincentbernat/jchroot/master/jchroot.c",
       "gcc -o /tmp/jchroot /tmp/jchroot.c",
