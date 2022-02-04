@@ -106,6 +106,11 @@ build {
     destination = "/tmp/"
   }
 
+  provisioner "file" {
+    source = "../dev-repo-public-key.asc"
+    destination = "/tmp/"
+  }
+
   provisioner "shell" {
     inline = [
       "#!/bin/bash -e",
@@ -143,7 +148,7 @@ build {
 
       # Install build tools
 
-      "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua",
+      "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua gem2deb",
 
       "wget -O /tmp/jchroot.c https://raw.githubusercontent.com/vincentbernat/jchroot/master/jchroot.c",
       "gcc -o /tmp/jchroot /tmp/jchroot.c",
@@ -187,62 +192,34 @@ build {
       "unzip /tmp/WpdPack_4_1_2.zip -d /tmp/WpdPack_4_1_2/",
       "sudo cp -r /tmp/WpdPack_4_1_2/WpdPack/Include/* /srv/chroot/stretch-amd64/usr/i686-w64-mingw32/include/",
 
-      # Prepare sbuild chroots
+      # Install chroots
 
-      "sbuild_chroot() {",
-      "  sudo sbuild-createchroot --arch=$2 $1 $3 $4",
+      "gpg --dearmor < /tmp/dev-repo-public-key.asc | sudo tee /etc/apt/trusted.gpg.d/dev-repo-public-key.gpg > /dev/null",
+      "echo deb http://dev-repos.solemnwarning.net/debian/ any main | sudo tee /etc/apt/sources.list.d/dev-repo.list > /dev/null",
 
-      "  if [ -n \"${var.apt_proxy_url}\" ]",
-      "  then",
-      "    echo \"Acquire::http::Proxy \\\"${var.apt_proxy_url}\\\";\" | sudo tee \"$3/etc/apt/apt.conf.d/proxy\" > /dev/null",
-      "  fi",
-      "}",
+      "sudo apt-get -y update",
+      "sudo apt-get -y install \\",
+      "    sbuild-chroot-buster-i386 \\",
+      "    sbuild-chroot-buster-amd64 \\",
+      "    sbuild-chroot-bullseye-i386 \\",
+      "    sbuild-chroot-bullseye-amd64 \\",
+      "    sbuild-chroot-bookworm-i386 \\",
+      "    sbuild-chroot-bookworm-amd64 \\",
+      "    sbuild-chroot-bionic-i386 \\",
+      "    sbuild-chroot-bionic-amd64 \\",
+      "    sbuild-chroot-focal-amd64 \\",
+      "    sbuild-chroot-impish-amd64",
 
-      # Debian 10 (buster)
-      "sbuild_chroot buster i386  /srv/chroot/buster-i386-sbuild/  http://cdn-aws.deb.debian.org/debian",
-      "sbuild_chroot buster amd64 /srv/chroot/buster-amd64-sbuild/ http://cdn-aws.deb.debian.org/debian",
-
-      # Debian 11 (bullseye)
-      "sbuild_chroot bullseye i386  /srv/chroot/bullseye-i386-sbuild/  http://cdn-aws.deb.debian.org/debian",
-      "sbuild_chroot bullseye amd64 /srv/chroot/bullseye-amd64-sbuild/ http://cdn-aws.deb.debian.org/debian",
-
-      # Debian 12(?) (bookworm)
-      "sbuild_chroot bookworm i386  /srv/chroot/bookworm-i386-sbuild/  http://cdn-aws.deb.debian.org/debian",
-      "sbuild_chroot bookworm amd64 /srv/chroot/bookworm-amd64-sbuild/ http://cdn-aws.deb.debian.org/debian",
-
-      # Ubuntu 18.04 (bionic)
-      "sbuild_chroot bionic i386  /srv/chroot/bionic-i386-sbuild/  http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/bionic-i386-sbuild/etc/apt/sources.list",
-
-      "sbuild_chroot bionic amd64 /srv/chroot/bionic-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/bionic-amd64-sbuild/etc/apt/sources.list",
-
-      # Ubuntu 20.04 (focal)
-      "sbuild_chroot focal amd64 /srv/chroot/focal-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/focal-amd64-sbuild/etc/apt/sources.list",
-
-      # Ubuntu 21.10 (impish)
-      "sbuild_chroot impish amd64 /srv/chroot/impish-amd64-sbuild/ http://uk.archive.ubuntu.com/ubuntu",
-      "sudo sed -i -e 's/ main$/ main universe/g' /srv/chroot/impish-amd64-sbuild/etc/apt/sources.list",
+      "if [ -n \"${var.apt_proxy_url}\" ]",
+      "then",
+      "  for apt in /srv/chroot/*/etc/apt",
+      "  do",
+      "    echo \"Acquire::http::Proxy \\\"${var.apt_proxy_url}\\\";\" | sudo tee \"$apt/apt.conf.d/proxy\" > /dev/null",
+      "  done",
+      "fi",
 
       # Use tmpfs for schroot overlays (build stuff in tmpfs)
       "echo 'none  /var/lib/schroot/union/overlay  tmpfs  size=75%  0  0' | sudo tee -a /etc/fstab > /dev/null",
-
-      # Set up "${DIST}-${ARCH}-buildkite" configurations for each of the
-      # sbuild chroots which will mount /var/lib/buildkite-agent/builds/ inside
-      # the chroot so they can be used for non-sbuild stuff too.
-
-      "for f in /etc/schroot/chroot.d/*-sbuild-*",
-      "do",
-      "    sed -E \\",
-      "        -e 's/^\\[(.*)-sbuild\\]$/[\\1-buildkite]/' \\",
-      "        -e 's/^profile=sbuild$/profile=buildkite/' \\",
-      "        < \"$f\" | sudo tee \"$(echo \"$f\" | sed -e 's/sbuild-/buildkite-/')\" > /dev/null",
-      "done",
-
-      "sudo cp -an /etc/schroot/sbuild /etc/schroot/buildkite",
-      "echo '/var/lib/buildkite-agent/builds/  /var/lib/buildkite-agent/builds/  none  rw,bind  0  0' \\",
-      "    | sudo tee -a /etc/schroot/buildkite/fstab > /dev/null",
 
       "sudo apt-get clean",
 
