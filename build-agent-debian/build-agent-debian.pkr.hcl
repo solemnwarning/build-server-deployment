@@ -20,8 +20,23 @@ variable "buildkite_agent_token" {
   sensitive = true
 }
 
+variable "buildkite_user_aws_access_key_id" {
+  default   = env("BUILDKITE_USER_AWS_ACCESS_KEY_ID")
+  sensitive = true
+}
+
+variable "buildkite_user_aws_secret_access_key" {
+  default   = env("BUILDKITE_USER_AWS_SECRET_ACCESS_KEY")
+  sensitive = true
+}
+
 variable "buildkite_user_ssh_key" {
   default   = env("BUILDKITE_USER_SSH_KEY")
+  sensitive = true
+}
+
+variable "dev_repo_private_key" {
+  default   = env("DEV_REPO_PRIVATE_KEY")
   sensitive = true
 }
 
@@ -136,6 +151,30 @@ build {
       "sudo install -m 0644 /tmp/buildkite-agent.cfg /etc/buildkite-agent/buildkite-agent.cfg",
       "sudo install -m 0644 /tmp/buildkite-agent.gitconfig /var/lib/buildkite-agent/.gitconfig",
 
+      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
+      "sudo systemctl daemon-reload",
+
+      "sudo systemctl enable buildkite-agent.service",
+
+      # Set up buildkite-agent user AWS configuration
+
+      "sudo -u buildkite-agent mkdir /var/lib/buildkite-agent/.aws/",
+
+      "sudo -u buildkite-agent tee /var/lib/buildkite-agent/.aws/config << 'EOF' > /dev/null",
+      "[default]",
+      "region = us-east-2",
+      "EOF",
+
+      "sudo -u buildkite-agent tee /var/lib/buildkite-agent/.aws/credentials << 'EOF' > /dev/null",
+      "[default]",
+      "aws_access_key_id = ${var.buildkite_user_aws_access_key_id}",
+      "aws_secret_access_key = ${var.buildkite_user_aws_secret_access_key}",
+      "EOF",
+
+      "sudo -u buildkite-agent chmod 0600 /var/lib/buildkite-agent/.aws/*",
+
+      # Set up buildkite-agent user SSH configuration
+
       "sudo mkdir -p /var/lib/buildkite-agent/.ssh/",
 
       "sudo tee /var/lib/buildkite-agent/.ssh/id_rsa > /dev/null << 'EOF'",
@@ -146,16 +185,18 @@ build {
 
       "sudo install -m 0600 -o buildkite-agent -g buildkite-agent /tmp/buildkite-agent.known_hosts /var/lib/buildkite-agent/.ssh/known_hosts",
 
-      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
-      "sudo systemctl daemon-reload",
+      # Import dev-repos signing key into the buildkite user's gpg keyring.
 
-      "sudo systemctl enable buildkite-agent.service",
+      "sudo -u buildkite-agent gpg --import << 'EOF'",
+      "${var.dev_repo_private_key}",
+      "EOF",
 
       # Install build tools
 
       "gpg --dearmor < /tmp/solemnwarning-archive-keyring.asc | sudo tee /etc/apt/trusted.gpg.d/solemnwarning-archive-keyring.gpg > /dev/null",
       "echo deb http://repos.solemnwarning.net/debian/ impish main | sudo tee /etc/apt/sources.list.d/solemnwarning.list > /dev/null",
 
+      "sudo apt-get update -y",
       "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua gem2deb deb-s3",
 
       "wget -O /tmp/jchroot.c https://raw.githubusercontent.com/vincentbernat/jchroot/master/jchroot.c",
