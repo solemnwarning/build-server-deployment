@@ -151,7 +151,9 @@ build {
       "sudo install -m 0644 /tmp/buildkite-agent.cfg /etc/buildkite-agent/buildkite-agent.cfg",
       "sudo install -m 0644 /tmp/buildkite-agent.gitconfig /var/lib/buildkite-agent/.gitconfig",
 
-      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
+      "sudo tee        /etc/systemd/system/buildkite-agent.service < /usr/share/buildkite-agent/systemd/buildkite-agent.service > /dev/null",
+      "sudo tee -a     /etc/systemd/system/buildkite-agent.service < /tmp/buildkite-agent.service                               > /dev/null",
+      "sudo chmod 0644 /etc/systemd/system/buildkite-agent.service",
       "sudo systemctl daemon-reload",
 
       "sudo systemctl enable buildkite-agent.service",
