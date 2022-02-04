@@ -194,7 +194,7 @@ build {
       # Install build tools
 
       "gpg --dearmor < /tmp/solemnwarning-archive-keyring.asc | sudo tee /etc/apt/trusted.gpg.d/solemnwarning-archive-keyring.gpg > /dev/null",
-      "echo deb http://repos.solemnwarning.net/debian/ impish main | sudo tee /etc/apt/sources.list.d/solemnwarning.list > /dev/null",
+      "echo deb http://repos.solemnwarning.net/ubuntu/ impish main | sudo tee /etc/apt/sources.list.d/solemnwarning.list > /dev/null",
 
       "sudo apt-get update -y",
       "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua gem2deb deb-s3",
