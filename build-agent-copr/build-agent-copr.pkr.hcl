@@ -129,7 +129,7 @@ build {
 
       "sudo -u buildkite-agent chmod 0600 /var/lib/buildkite-agent/.aws/*",
 
-      "sudo yum -y install rpm-build awscli copr-cli",
+      "sudo yum -y install make rpm-build awscli copr-cli",
 
       "sudo dnf clean all",
     ]
