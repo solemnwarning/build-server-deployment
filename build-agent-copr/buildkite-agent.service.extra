@@ -1,0 +1,4 @@
+
+[Service]
+ExecStopPost=+/sbin/shutdown -h +1 "buildkite-agent stopped - shutting down"
+Restart=no

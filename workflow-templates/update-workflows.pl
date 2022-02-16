@@ -8,6 +8,7 @@ use Readonly;
 use Template;
 
 Readonly my @IMAGE_NAMES => qw(
+	build-agent-copr
 	build-agent-debian
 	build-agent-fedora
 	build-agent-freebsd
