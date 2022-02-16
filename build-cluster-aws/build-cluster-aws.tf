@@ -114,7 +114,7 @@ resource "aws_spot_fleet_request" "copr" {
   terminate_instances_with_expiration = true
 
   tags = {
-    buildkite-agent-meta-data = "queue=linux-copr"
+    buildkite-agent-meta-data = "queue=copr-cli"
     buildkite-agent-spawn     = "4"
 
     buildkite-scaler-min-instances = "0"
