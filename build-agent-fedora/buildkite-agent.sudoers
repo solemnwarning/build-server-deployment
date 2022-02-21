@@ -1,3 +1,0 @@
-Defaults:buildkite-agent env_keep += "RPM_BUILD_NCPUS"
-
-buildkite-agent ALL=(root) NOPASSWD: /usr/local/bin/buildkite-build-rpm
