@@ -124,7 +124,7 @@ resource "aws_spot_fleet_request" "copr" {
 
   launch_specification {
     ami           = data.aws_ami.build_agent_copr.id
-    instance_type = "a1.medium"
+    instance_type = "c5a.large"
 
     subnet_id = aws_subnet.build_cluster_proxy.id
 

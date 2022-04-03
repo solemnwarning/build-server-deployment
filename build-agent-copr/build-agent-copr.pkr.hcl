@@ -32,7 +32,7 @@ variable "buildkite_user_aws_secret_access_key" {
 
 source "amazon-ebs" "build-agent-copr" {
   ami_name = "build-agent-copr-${var.ami_branch}-${var.ami_commit}-{{ isotime `20060102-150405` }}"
-  instance_type = "a1.medium"
+  instance_type = "c5a.large"
   region        = "us-east-2"
 
   tags = {
@@ -42,7 +42,7 @@ source "amazon-ebs" "build-agent-copr" {
 
   source_ami_filter {
     filters = {
-      name                = "Fedora-Cloud-Base-35-*.aarch64-hvm-*"
+      name                = "Fedora-Cloud-Base-35-*.x86_64-hvm-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
