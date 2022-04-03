@@ -89,7 +89,7 @@ build {
       "sudo tee /etc/yum.repos.d/buildkite-agent.repo <<'EOF'",
       "[buildkite-agent]",
       "name = Buildkite Pty Ltd",
-      "baseurl = https://yum.buildkite.com/buildkite-agent/stable/aarch64/",
+      "baseurl = https://yum.buildkite.com/buildkite-agent/stable/x86_64/",
       "enabled = 1",
       "gpgcheck = 0",
       "priority = 1",
