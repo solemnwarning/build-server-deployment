@@ -175,6 +175,11 @@ build {
   }
 
   provisioner "file" {
+    source      = "buildkite-command-hook.bat"
+    destination = "C:\\buildkite-agent\\hooks\\command.bat"
+  }
+
+  provisioner "file" {
     source      = "buildkite-agent-run.bat"
     destination = "C:\\buildkite-agent\\buildkite-agent-run.bat"
   }

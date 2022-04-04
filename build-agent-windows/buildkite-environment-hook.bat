@@ -48,10 +48,7 @@ rem  	)
 			EXIT 1
 		)
 		
-		SET PATH=%PATH%;C:\msys64\mingw32\bin;C:\msys64\usr\bin;C:\msys64\usr\lib\p7zip
-		SET CC=gcc
-		SET CXX=g++
-		SET LUA=lua.exe
+		SET MSYSTEM=MINGW32
 		
 		SET toolchain_selected=1
 	)
@@ -64,10 +61,7 @@ rem  	)
 			EXIT 1
 		)
 		
-		SET PATH=%PATH%;C:\msys64\mingw64\bin;C:\msys64\usr\bin;C:\msys64\usr\lib\p7zip
-		SET CC=gcc
-		SET CXX=g++
-		SET LUA=lua.exe
+		SET MSYSTEM=MINGW64
 		
 		SET toolchain_selected=1
 	)
