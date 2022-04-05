@@ -3,6 +3,9 @@ SET toolchain_selected=0
 set BUILDKITE_CLEAN_CHECKOUT=true
 set BUILDKITE_NO_LOCAL_HOOKS=true
 
+rem Add MSYS to PATH so buildkite-agent can find its Git.
+set PATH=%PATH%;C:\msys64\usr\bin
+
 set X_PARALLEL_JOBS=4
 
 FOR /F %%i IN ('buildkite-agent step get --format json agents') DO (
