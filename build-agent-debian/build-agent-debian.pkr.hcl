@@ -56,7 +56,7 @@ source "amazon-ebs" "build-agent-debian" {
 
   source_ami_filter {
     filters = {
-      name                = "ubuntu/images/*/ubuntu-impish-21.10-amd64-server-*"
+      name                = "ubuntu/images/*/ubuntu-jammy-22.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -196,7 +196,7 @@ build {
       # Install build tools
 
       "gpg --dearmor < /tmp/solemnwarning-archive-keyring.asc | sudo tee /etc/apt/trusted.gpg.d/solemnwarning-archive-keyring.gpg > /dev/null",
-      "echo deb http://repos.solemnwarning.net/ubuntu/ impish main | sudo tee /etc/apt/sources.list.d/solemnwarning.list > /dev/null",
+      "echo deb http://repos.solemnwarning.net/ubuntu/ jammy main | sudo tee /etc/apt/sources.list.d/solemnwarning.list > /dev/null",
 
       "sudo apt-get update -y",
       "sudo apt-get install -y build-essential dpkg-dev sbuild git-buildpackage debhelper dh-lua gem2deb deb-s3",
@@ -259,7 +259,6 @@ build {
       "    sbuild-chroot-bionic-i386 \\",
       "    sbuild-chroot-bionic-amd64 \\",
       "    sbuild-chroot-focal-amd64 \\",
-      "    sbuild-chroot-impish-amd64 \\",
       "    sbuild-chroot-jammy-amd64",
 
       "if [ -n \"${var.apt_proxy_url}\" ]",
