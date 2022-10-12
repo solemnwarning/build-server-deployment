@@ -23,7 +23,7 @@ variable "ami_commit" {
 source "amazon-ebs" "freebsd-agent" {
   ami_name = "build-agent-freebsd-${var.ami_branch}-${var.ami_commit}-{{ isotime `20060102-150405` }}"
 
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   region        = "us-east-2"
 
   tags = {
@@ -33,7 +33,7 @@ source "amazon-ebs" "freebsd-agent" {
 
   source_ami_filter {
     filters = {
-      name                = "FreeBSD 13.*-RELEASE-amd64-*"
+      name                = "FreeBSD 13.*-RELEASE-amd64*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
