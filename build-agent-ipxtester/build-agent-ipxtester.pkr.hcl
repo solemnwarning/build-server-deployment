@@ -42,7 +42,7 @@ source "amazon-ebs" "build-agent-ipxtester" {
 
   source_ami_filter {
     filters = {
-      name                = "debian-10-amd64-*"
+      name                = "debian-11-amd64-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -136,11 +136,14 @@ build {
       # Install VirtualBox
 
       "wget -qO - https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key add -",
-      "echo deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian buster contrib | sudo tee /etc/apt/sources.list.d/buildkite-agent.list > /dev/null",
+      "echo deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bullseye contrib | sudo tee /etc/apt/sources.list.d/buildkite-agent.list > /dev/null",
 
       "sudo apt-get update",
       "sudo apt-get install -y linux-headers-cloud-amd64",
-      "sudo apt-get install -y virtualbox-6.0",
+      "sudo apt-get install -y virtualbox-6.1",
+
+      "echo '* 192.168.0.0/16' > /tmp/vbox-networks.conf",
+      "sudo install -m0644 /tmp/vbox-networks.conf /etc/vbox/networks.conf",
 
       # Install ipxtester and depedencies
 
