@@ -125,9 +125,14 @@ build {
       "msys 'pacman --noconfirm -Scc'",
 
       "function mingw32() { $env:MSYSTEM = 'MINGW32'; C:\\msys64\\usr\\bin\\bash.exe @('-lc') + @Args; Remove-Item Env:\\MSYSTEM }",
-      "mingw32 'luarocks install busted'",
-
       "function mingw64() { $env:MSYSTEM = 'MINGW64'; C:\\msys64\\usr\\bin\\bash.exe @('-lc') + @Args; Remove-Item Env:\\MSYSTEM }",
+
+      # Work around https://github.com/msys2/MINGW-packages/pull/12002
+      "msys 'mkdir -p C:/msys64/mingw{32,64}/lib/luarocks/rocks-5.4/luafilesystem/1.8.0-1/{conf,lib}'",
+      "mingw32 'luarocks install luafilesystem'",
+      "mingw64 'luarocks install luafilesystem'",
+
+      "mingw32 'luarocks install busted'",
       "mingw64 'luarocks install busted'",
     ]
 
