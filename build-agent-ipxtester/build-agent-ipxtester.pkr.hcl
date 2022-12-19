@@ -139,7 +139,8 @@ build {
       "echo deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bullseye contrib | sudo tee /etc/apt/sources.list.d/buildkite-agent.list > /dev/null",
 
       "sudo apt-get update",
-      "sudo apt-get install -y linux-headers-cloud-amd64",
+      "sudo apt-get install -y module-assistant",
+      "yes | sudo m-a prepare",
       "sudo apt-get install -y virtualbox-6.1",
 
       "echo '* 192.168.0.0/16' > /tmp/vbox-networks.conf",
