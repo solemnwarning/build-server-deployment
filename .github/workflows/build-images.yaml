@@ -44,6 +44,9 @@ jobs:
           working_directory: build-agent-copr
           target: build-agent-copr.pkr.hcl
 
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
+
       # Validate Packer definition
       - name: Build AMI (packer validate)
         if: steps.check.outputs.build_ami == 'true'
@@ -113,6 +116,9 @@ jobs:
           command: init
           working_directory: build-agent-debian
           target: build-agent-debian.pkr.hcl
+
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
 
       # Validate Packer definition
       - name: Build AMI (packer validate)
@@ -184,6 +190,9 @@ jobs:
           working_directory: build-agent-freebsd
           target: build-agent-freebsd.pkr.hcl
 
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
+
       # Validate Packer definition
       - name: Build AMI (packer validate)
         if: steps.check.outputs.build_ami == 'true'
@@ -253,6 +262,9 @@ jobs:
           command: init
           working_directory: build-agent-ipxtester
           target: build-agent-ipxtester.pkr.hcl
+
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
 
       # Validate Packer definition
       - name: Build AMI (packer validate)
@@ -333,6 +345,9 @@ jobs:
           working_directory: build-agent-windows
           target: build-agent-windows.pkr.hcl
 
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
+
       # Validate Packer definition
       - name: Build AMI (packer validate)
         if: steps.check.outputs.build_ami == 'true'
@@ -402,6 +417,9 @@ jobs:
           command: init
           working_directory: build-cluster-manager
           target: build-cluster-manager.pkr.hcl
+
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
 
       # Validate Packer definition
       - name: Build AMI (packer validate)

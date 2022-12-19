@@ -53,6 +53,9 @@ jobs:
           working_directory: [% image_name %]
           target: [% image_name %].pkr.hcl
 
+        env:
+          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
+
       # Validate Packer definition
       - name: Build AMI (packer validate)
         if: steps.check.outputs.build_ami == 'true'
