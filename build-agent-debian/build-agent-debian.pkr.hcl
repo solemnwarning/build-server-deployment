@@ -260,7 +260,8 @@ build {
       "    sbuild-chroot-bionic-amd64 \\",
       "    sbuild-chroot-focal-amd64 \\",
       "    sbuild-chroot-jammy-amd64 \\",
-      "    sbuild-chroot-kinetic-amd64",
+      "    sbuild-chroot-kinetic-amd64 \\",
+      "    sbuild-chroot-lunar-amd64",
 
       "if [ -n \"${var.apt_proxy_url}\" ]",
       "then",
