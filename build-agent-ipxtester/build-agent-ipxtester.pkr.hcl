@@ -130,7 +130,9 @@ build {
       "sudo install -m 0755 -o root -g root /tmp/buildkite-environment-hook /etc/buildkite-agent/hooks/environment",
       "sudo install -m 0644 -o root -g root /tmp/buildkite-agent.cfg        /etc/buildkite-agent/buildkite-agent.cfg",
 
-      "sudo install -m 0644 /tmp/buildkite-agent.service /etc/systemd/system/buildkite-agent.service",
+      "sudo tee        /etc/systemd/system/buildkite-agent.service < /usr/share/buildkite-agent/systemd/buildkite-agent.service > /dev/null",
+      "sudo tee -a     /etc/systemd/system/buildkite-agent.service < /tmp/buildkite-agent.service                               > /dev/null",
+      "sudo chmod 0644 /etc/systemd/system/buildkite-agent.service",
       "sudo systemctl daemon-reload",
 
       # Install VirtualBox
