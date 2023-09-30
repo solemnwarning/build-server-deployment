@@ -95,83 +95,83 @@ resource "aws_instance" "build_cluster_manager" {
 
 # build-agent-copr spot request fleet, scaled by build-cluster-manager.
 
-data "aws_ami" "build_agent_copr" {
-  most_recent = true
+#data "aws_ami" "build_agent_copr" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["build-agent-copr-master-*"]
+#  }
+#
+#  owners = ["self"]
+#}
 
-  filter {
-    name   = "name"
-    values = ["build-agent-copr-master-*"]
-  }
-
-  owners = ["self"]
-}
-
-resource "aws_spot_fleet_request" "copr" {
-  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
-  target_capacity = 0
-
-  # terminate_instances = true
-  terminate_instances_with_expiration = true
-
-  tags = {
-    buildkite-agent-meta-data = "queue=copr-cli"
-    buildkite-agent-spawn     = "4"
-
-    buildkite-scaler-min-instances = "0"
-    buildkite-scaler-max-instances = "1"
-    buildkite-scaler-enable        = "1"
-  }
-
-  launch_specification {
-    ami           = data.aws_ami.build_agent_copr.id
-    instance_type = "c5a.large"
-
-    subnet_id = aws_subnet.build_cluster_proxy.id
-
-    associate_public_ip_address = true
-    key_name = "solemnwarning@infinity"
-  }
-}
+#resource "aws_spot_fleet_request" "copr" {
+#  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
+#  target_capacity = 0
+#
+#  # terminate_instances = true
+#  terminate_instances_with_expiration = true
+#
+#  tags = {
+#    buildkite-agent-meta-data = "queue=copr-cli"
+#    buildkite-agent-spawn     = "4"
+#
+#    buildkite-scaler-min-instances = "0"
+#    buildkite-scaler-max-instances = "1"
+#    buildkite-scaler-enable        = "1"
+#  }
+#
+#  launch_specification {
+#    ami           = data.aws_ami.build_agent_copr.id
+#    instance_type = "c5a.large"
+#
+#    subnet_id = aws_subnet.build_cluster_proxy.id
+#
+#    associate_public_ip_address = true
+#    key_name = "solemnwarning@infinity"
+#  }
+#}
 
 # build-agent-debian spot request fleet, scaled by build-cluster-manager.
 
-data "aws_ami" "build_agent_debian" {
-  most_recent = true
+#data "aws_ami" "build_agent_debian" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["build-agent-debian-master-*"]
+#  }
+#
+#  owners = ["self"]
+#}
 
-  filter {
-    name   = "name"
-    values = ["build-agent-debian-master-*"]
-  }
-
-  owners = ["self"]
-}
-
-resource "aws_spot_fleet_request" "debian" {
-  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
-  target_capacity = 0
-
-  # terminate_instances = true
-  terminate_instances_with_expiration = true
-
-  tags = {
-    buildkite-agent-meta-data = "queue=linux-generic,queue=linux-debian"
-    buildkite-agent-spawn     = "1"
-
-    buildkite-scaler-min-instances = "0"
-    buildkite-scaler-max-instances = "4"
-    buildkite-scaler-enable        = "1"
-  }
-
-  launch_specification {
-    ami           = data.aws_ami.build_agent_debian.id
-    instance_type = "c5a.xlarge"
-
-    subnet_id = aws_subnet.build_cluster_proxy.id
-
-    associate_public_ip_address = true
-    key_name = "solemnwarning@infinity"
-  }
-}
+#resource "aws_spot_fleet_request" "debian" {
+#  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
+#  target_capacity = 0
+#
+#  # terminate_instances = true
+#  terminate_instances_with_expiration = true
+#
+#  tags = {
+#    buildkite-agent-meta-data = "queue=linux-generic,queue=linux-debian"
+#    buildkite-agent-spawn     = "1"
+#
+#    buildkite-scaler-min-instances = "0"
+#    buildkite-scaler-max-instances = "4"
+#    buildkite-scaler-enable        = "1"
+#  }
+#
+#  launch_specification {
+#    ami           = data.aws_ami.build_agent_debian.id
+#    instance_type = "c5a.xlarge"
+#
+#    subnet_id = aws_subnet.build_cluster_proxy.id
+#
+#    associate_public_ip_address = true
+#    key_name = "solemnwarning@infinity"
+#  }
+#}
 
 # build-agent-freebsd spot request fleet, scaled by build-cluster-manager.
 
@@ -215,43 +215,43 @@ resource "aws_spot_fleet_request" "freebsd" {
 
 # build-agent-ipxtester spot request fleet, scaled by build-cluster-manager.
 
-data "aws_ami" "build_agent_ipxtester" {
-  most_recent = true
+#data "aws_ami" "build_agent_ipxtester" {
+#  most_recent = true
+#
+#  filter {
+#    name   = "name"
+#    values = ["build-agent-ipxtester-master-*"]
+#  }
+#
+#  owners = ["self"]
+#}
 
-  filter {
-    name   = "name"
-    values = ["build-agent-ipxtester-master-*"]
-  }
-
-  owners = ["self"]
-}
-
-resource "aws_spot_fleet_request" "ipxtester" {
-  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
-  target_capacity = 0
-
-  # terminate_instances = true
-  terminate_instances_with_expiration = true
-
-  tags = {
-    buildkite-agent-meta-data = "queue=ipxwrapper-test"
-    buildkite-agent-spawn     = "6"
-
-    buildkite-scaler-min-instances = "0"
-    buildkite-scaler-max-instances = "1"
-    buildkite-scaler-enable        = "1"
-  }
-
-  launch_specification {
-    ami           = data.aws_ami.build_agent_ipxtester.id
-    instance_type = "m5.metal"
-
-    subnet_id = aws_subnet.build_cluster_proxy.id
-
-    associate_public_ip_address = true
-    key_name = "solemnwarning@infinity"
-  }
-}
+#resource "aws_spot_fleet_request" "ipxtester" {
+#  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
+#  target_capacity = 0
+#
+#  # terminate_instances = true
+#  terminate_instances_with_expiration = true
+#
+#  tags = {
+#    buildkite-agent-meta-data = "queue=ipxwrapper-test"
+#    buildkite-agent-spawn     = "6"
+# 
+#    buildkite-scaler-min-instances = "0"
+#    buildkite-scaler-max-instances = "1"
+#    buildkite-scaler-enable        = "1"
+#  }
+#
+#  launch_specification {
+#    ami           = data.aws_ami.build_agent_ipxtester.id
+#    instance_type = "m5.metal"
+#
+#    subnet_id = aws_subnet.build_cluster_proxy.id
+#
+#    associate_public_ip_address = true
+#    key_name = "solemnwarning@infinity"
+#  }
+#}
 
 
 # build-agent-windows spot request fleet, scaled by build-cluster-manager.
