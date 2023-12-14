@@ -75,6 +75,7 @@ build {
     inline = [
       "su - root -c 'env ASSUME_ALWAYS_YES=yes pkg install \\",
       "  bash           \\",
+      "  botan2         \\",
       "  capstone4      \\",
       "  git            \\",
       "  gmake          \\",
