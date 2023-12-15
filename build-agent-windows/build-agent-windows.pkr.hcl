@@ -119,7 +119,7 @@ build {
       "msys 'pacman --noconfirm -S base-devel git p7zip mingw-w64-{i686,x86_64}-{toolchain,wxWidgets3.2,jansson,capstone,jbigkit,lua,lua-luarocks,libbotan,libunistring}'",
 
       # Need the "msys" GCC for compiling Template Toolkit...
-      "msys 'pacman --noconfirm -S gcc libxcrypt libxcrypt-devel'",
+      "msys 'pacman --noconfirm -S gcc libxcrypt libxcrypt-devel ca-certificates'",
       "msys 'PERL_MM_USE_DEFAULT=1 perl -MCPAN -e ''install Template'' '",
 
       "msys 'pacman --noconfirm -Scc'",
@@ -194,4 +194,3 @@ build {
     ]
   }
 }
-
