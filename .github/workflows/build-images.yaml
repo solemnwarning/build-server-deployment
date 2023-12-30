@@ -84,88 +84,6 @@ jobs:
           working_directory: build-agent-freebsd
           target: build-agent-freebsd.pkr.hcl
 
-  build-agent-windows:
-    runs-on: ubuntu-latest
-    name: build-agent-windows
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: recursive
-
-      # Check if we should actually build this AMI.
-      - name: Check if AMI up to date
-        id: check
-
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-2
-
-        run: ./.github/workflows/check-ami.sh build-agent-windows
-
-      - name: Download HTML Help Workshop
-        if: steps.check.outputs.build_ami == 'true'
-
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-2
-
-        run: aws s3 cp "s3://build-cluster-state/HTML Help Workshop.zip" "build-agent-windows/HTML Help Workshop.zip"
-
-      # Download any plugins/etc
-      - name: Build AMI (packer init)
-        if: steps.check.outputs.build_ami == 'true'
-        uses: hashicorp/packer-github-actions@master
-
-        with:
-          command: init
-          working_directory: build-agent-windows
-          target: build-agent-windows.pkr.hcl
-
-        env:
-          PACKER_GITHUB_API_TOKEN: ${{ secrets.PACKER_GITHUB_API_TOKEN }}
-
-      # Validate Packer definition
-      - name: Build AMI (packer validate)
-        if: steps.check.outputs.build_ami == 'true'
-        uses: hashicorp/packer-github-actions@master
-
-        with:
-          command: validate
-          arguments: -syntax-only
-          working_directory: build-agent-windows
-          target: build-agent-windows.pkr.hcl
-
-      # Actually build the AMI
-      - name: Build AMI (packer build)
-        if: steps.check.outputs.build_ami == 'true'
-        uses: hashicorp/packer-github-actions@master
-
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUILDKITE_AGENT_TOKEN: ${{ secrets.BUILDKITE_AGENT_TOKEN }}
-          AMI_BRANCH: ${{ steps.check.outputs.branch_name }}
-          AMI_COMMIT: ${{ steps.check.outputs.dir_sha }}
-          IPXTESTER_AWS_ACCESS_KEY_ID: ${{ secrets.IPXTESTER_AWS_ACCESS_KEY_ID }}
-          IPXTESTER_AWS_SECRET_ACCESS_KEY: ${{ secrets.IPXTESTER_AWS_SECRET_ACCESS_KEY }}
-          BUILDKITE_USER_AWS_ACCESS_KEY_ID: ${{ secrets.BUILDKITE_USER_AWS_ACCESS_KEY_ID }}
-          BUILDKITE_USER_AWS_SECRET_ACCESS_KEY: ${{ secrets.BUILDKITE_USER_AWS_SECRET_ACCESS_KEY }}
-          BUILDKITE_USER_SSH_KEY: ${{ secrets.BUILDKITE_USER_SSH_KEY }}
-          DEV_REPO_PRIVATE_KEY: ${{ secrets.DEV_REPO_PRIVATE_KEY }}
-          SCALER_AWS_ACCESS_KEY_ID: ${{ secrets.SCALER_AWS_ACCESS_KEY_ID }}
-          SCALER_AWS_SECRET_ACCESS_KEY: ${{ secrets.SCALER_AWS_SECRET_ACCESS_KEY }}
-          SCALER_BUILDKITE_API_KEY: ${{ secrets.SCALER_BUILDKITE_API_KEY }}
-
-        with:
-          command: build
-          working_directory: build-agent-windows
-          target: build-agent-windows.pkr.hcl
-
   build-cluster-manager:
     runs-on: ubuntu-latest
     name: build-cluster-manager
@@ -243,7 +161,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: "Deploy cluster"
-    needs: [ build-agent-freebsd, build-agent-windows, build-cluster-manager ]
+    needs: [ build-agent-freebsd, build-cluster-manager ]
 
     steps:
     - name: Checkout Repository

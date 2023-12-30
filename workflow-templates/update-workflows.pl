@@ -9,7 +9,6 @@ use Template;
 
 Readonly my @IMAGE_NAMES => qw(
 	build-agent-freebsd
-	build-agent-windows
 	build-cluster-manager
 );
 

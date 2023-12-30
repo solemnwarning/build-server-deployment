@@ -256,39 +256,39 @@ resource "aws_spot_fleet_request" "freebsd" {
 
 # build-agent-windows spot request fleet, scaled by build-cluster-manager.
 
-data "aws_ami" "build_agent_windows" {
-  most_recent = true
+# data "aws_ami" "build_agent_windows" {
+#   most_recent = true
+#
+#   filter {
+#     name   = "name"
+#     values = ["build-agent-windows-master-*"]
+#   }
+#
+#   owners = ["self"]
+# }
 
-  filter {
-    name   = "name"
-    values = ["build-agent-windows-master-*"]
-  }
-
-  owners = ["self"]
-}
-
-resource "aws_spot_fleet_request" "windows" {
-  iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
-  target_capacity = 0
-
-  # terminate_instances = true
-  terminate_instances_with_expiration = true
-
-  tags = {
-    buildkite-agent-meta-data = "queue=mingw-i686,queue=mingw-x86_64"
-    buildkite-agent-spawn     = "1"
-
-    buildkite-scaler-min-instances = "0"
-    buildkite-scaler-max-instances = "2"
-    buildkite-scaler-enable        = "1"
-  }
-
-  launch_specification {
-    ami           = data.aws_ami.build_agent_windows.id
-    instance_type = "c5a.xlarge"
-
-    subnet_id = aws_subnet.build_cluster_proxy.id
-
-    associate_public_ip_address = true
-  }
-}
+# resource "aws_spot_fleet_request" "windows" {
+#   iam_fleet_role  = "arn:aws:iam::652694334613:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet"
+#   target_capacity = 0
+#
+#   # terminate_instances = true
+#   terminate_instances_with_expiration = true
+#
+#   tags = {
+#     buildkite-agent-meta-data = "queue=mingw-i686,queue=mingw-x86_64"
+#     buildkite-agent-spawn     = "1"
+#
+#     buildkite-scaler-min-instances = "0"
+#     buildkite-scaler-max-instances = "2"
+#     buildkite-scaler-enable        = "1"
+#   }
+#
+#   launch_specification {
+#     ami           = data.aws_ami.build_agent_windows.id
+#     instance_type = "c5a.xlarge"
+#
+#     subnet_id = aws_subnet.build_cluster_proxy.id
+#
+#     associate_public_ip_address = true
+#   }
+# }
