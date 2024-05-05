@@ -1,5 +1,7 @@
 # build-server-deployment
 
+**NOTE:** This repository is no longer maintained, I have migrated from AWS EC2 to a self-hosted KVM cluster deployed with similar tooling here: [kvm-build-environment](https://github.com/solemnwarning/kvm-build-environment).
+
 ## What is this?
 
 This is a collection of scripts and Packer/Terraform definitions that build and deploy my various Buildkite CI build agents (except for Mac) on AWS.
